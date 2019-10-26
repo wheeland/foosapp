@@ -159,6 +159,8 @@ private:
 class FoosController : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(Player *training READ training CONSTANT)
+    Q_PROPERTY(Player *myself READ myself CONSTANT)
 
     enum Role {
         PlayerRole = Qt::UserRole + 1
@@ -173,6 +175,9 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     DataModel::Model_V0 toModel_V0() const;
+
+    Player *training() const { return m_training; }
+    Player *myself() const { return m_myself; }
 
 private:
     QVector<Player*> m_players;
