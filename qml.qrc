@@ -8,6 +8,7 @@
         <file>qml/NoteList.qml</file>
         <file>qml/CategorySelector.qml</file>
         <file>qml/Style.qml</file>
+        <file>qml/SingleshotTimer.qml</file>
     </qresource>
 </RCC>
 

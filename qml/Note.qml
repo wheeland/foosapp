@@ -12,7 +12,17 @@ Rectangle {
     property alias textFocus: text.focus
 
     signal selectCategory(var cat)
-    signal requestEdit()
+    signal editRequested()
+
+    SingleshotTimer {
+        id: editRequestedTimer
+        action: root.editRequested()
+        delay: 100
+    }
+
+    function save() {
+        root.note.text = text.text;
+    }
 
     color: _style.colorArea
     clip: true
@@ -78,6 +88,6 @@ Rectangle {
     MouseArea {
         anchors.fill: content
         onClicked: root.expanded = !root.expanded
-        onDoubleClicked: root.requestEdit()
+        onDoubleClicked: editRequestedTimer.start()
     }
 }

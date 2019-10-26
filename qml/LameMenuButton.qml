@@ -13,8 +13,12 @@ Rectangle {
     border.color: _style.colorBorder
     border.width: _scale
 
+    property real center
+    x: center - width / 2
     width: text.width + 10 * _scale
     height: text.height + 8 * _scale
+
+    anchors.verticalCenter: parent.verticalCenter
 
     Text {
         id: text

@@ -51,6 +51,11 @@ Rectangle {
         }
     }
 
+    function hide() {
+        d.category = null;
+        d.stage = 0;
+    }
+
     color: "white"
     clip: true
 
@@ -78,14 +83,16 @@ Rectangle {
                     width: content.width - 10
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: {
+                        if (d.category == null)
+                            return "";
                         if (d.stage === 0)
-                            return d.category.primaryName(d.options[index])
+                            return d.category.primaryName(d.options[index]);
                         else if (d.stage === 1)
-                            return d.category.techniqueName(d.options[index])
+                            return d.category.techniqueName(d.options[index]);
                         else if (d.stage === 2)
-                            return d.category.subTechniqueName(d.options[index])
+                            return d.category.subTechniqueName(d.options[index]);
                         else
-                            return ""
+                            return "";
                     }
                     onClicked: d.next(index)
                 }

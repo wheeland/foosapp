@@ -12,8 +12,17 @@ Rectangle {
     QtObject {
         id: d
         property Foos.Note editNote
-        readonly property bool editing: (editNote !== null)
+        readonly property bool editing: (d.editNote !== null)
         readonly property real padding: 4
+    }
+
+    function endEditing(save) {
+        if (save)
+            editNoteItem.save();
+        if (d.editing && d.editNote.text.length === 0)
+            player.removeNote(d.editNote)
+        categorySelector.hide();
+        d.editNote = null;
     }
 
     //
@@ -24,10 +33,30 @@ Rectangle {
         height: 40 * _scale
 
         LameMenuButton {
-            text: "Back"
-            x: 10 * _scale
+            text: d.editing ? "Cancel" : "Back"
+            center: 40 * _scale
+            onClicked: {
+                endEditing(false);
+            }
+        }
+
+        LameMenuButton {
+            text: d.editing ? "Category" : "Add"
+            center: 120 * _scale
             anchors.verticalCenter: parent.verticalCenter
-            onClicked: d.editNote = null
+            onClicked: {
+                if (!d.editing)
+                    d.editNote = player.newNote();
+                categorySelector.show(d.editNote.category);
+            }
+        }
+
+        LameMenuButton {
+            visible: d.editing
+            text: "Save"
+            center: 220 * _scale
+            anchors.verticalCenter: parent.verticalCenter
+            onClicked: endEditing(true)
         }
     }
 
@@ -44,7 +73,7 @@ Rectangle {
         // Scroll View of all notes
         //
         Flickable {
-//            visible: !d.editing   // MouseArea won't get release event if invisible
+            visible: !d.editing   // MouseArea won't get release event if invisible
             anchors.fill: parent
 
             contentHeight: noteColumn.height
@@ -63,7 +92,7 @@ Rectangle {
                         note: model.note
 
                         onSelectCategory: categorySelector.show(cat)
-                        onRequestEdit: d.editNote = model.note
+                        onEditRequested: d.editNote = model.note
                     }
                 }
             }
@@ -73,6 +102,7 @@ Rectangle {
         // Note that is being edited, on top of everything else
         //
         Note {
+            id: editNoteItem
             visible: d.editing
             anchors.fill: parent
             anchors.margins: d.padding * _scale
@@ -80,12 +110,15 @@ Rectangle {
             note: d.editNote
             animating: false
         }
-    }
 
-    CategorySelector {
-        id: categorySelector
-        anchors.centerIn: parent
-        width: 200
-        height: 200
+        //
+        // Select category for new/existing notes
+        //
+        CategorySelector {
+            id: categorySelector
+            anchors.centerIn: parent
+            width: 200
+            height: 200
+        }
     }
 }

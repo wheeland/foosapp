@@ -8,8 +8,8 @@ QtObject {
     readonly property color colorBorder: "#999999"
 
     readonly property color colorMenu: "#e5e0d5"
-    readonly property color colorMenuButton: "#aaaaaa"
-    readonly property color colorMenuClicked: "#999999"
+    readonly property color colorMenuButton: "#b5b0a8"
+    readonly property color colorMenuClicked: "#cccccc"
 
     readonly property color colorText: "#000000"
     readonly property color colorTextHighlighted: "#800000"
