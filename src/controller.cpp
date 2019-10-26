@@ -36,6 +36,39 @@ void Category::fromInt(int i)
     setSubTechnique((SubTechnique) ((i >> 0) & 0xFF));
 }
 
+QString Category::label() const
+{
+    const QStringList primaries {
+        "", "3 Offensive", "5 Offensive", "5 Defensive", "2 Offensive", "2-to-5", "Mindset"
+    };
+    const QStringList techniques {
+        "", "Pin-Shot", "Jet", "Pullshot", "Back-Pin", "Tic-Tac"
+    };
+    const QStringList subtechniques {
+        "", "Left", "Half-Left", "Middle", "Half-Right", "Right"
+    };
+
+    const QString prim = primaries.value((int) m_primary);
+    if (prim.isEmpty())
+        return "Uncategorized";
+
+    const QString tech = techniques.value((int) m_technique);
+    const QString subtech = subtechniques.value((int) m_subTechnique);
+
+    QString ret = prim;
+    if (!tech.isEmpty()) {
+        ret += ": ";
+        ret += tech;
+
+        if (!subtech.isEmpty()) {
+            ret += ": ";
+            ret += subtech;
+        }
+    }
+
+    return ret;
+}
+
 void Category::setPrimary(Category::Primary primary)
 {
     if (m_primary == primary)
@@ -43,6 +76,7 @@ void Category::setPrimary(Category::Primary primary)
 
     m_primary = primary;
     emit primaryChanged(m_primary);
+    emit labelChanged();
 }
 
 void Category::setTechnique(Category::Technique technique)
@@ -52,6 +86,7 @@ void Category::setTechnique(Category::Technique technique)
 
     m_technique = technique;
     emit techniqueChanged(m_technique);
+    emit labelChanged();
 }
 
 void Category::setSubTechnique(Category::SubTechnique subTechnique)
@@ -61,6 +96,7 @@ void Category::setSubTechnique(Category::SubTechnique subTechnique)
 
     m_subTechnique = subTechnique;
     emit subTechniqueChanged(m_subTechnique);
+    emit labelChanged();
 }
 
 // -----------------------------------------

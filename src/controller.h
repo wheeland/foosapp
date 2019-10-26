@@ -13,6 +13,7 @@ class Category : public QObject
     Q_PROPERTY(Primary primary READ primary WRITE setPrimary NOTIFY primaryChanged)
     Q_PROPERTY(Technique technique READ technique WRITE setTechnique NOTIFY techniqueChanged)
     Q_PROPERTY(SubTechnique subTechnique READ subTechnique WRITE setSubTechnique NOTIFY subTechniqueChanged)
+    Q_PROPERTY(QString label READ label NOTIFY labelChanged)
 
 public:
     enum Primary
@@ -60,6 +61,8 @@ public:
     int toInt() const;
     void fromInt(int i);
 
+    QString label() const;
+
 public slots:
     void setPrimary(Primary primary);
     void setTechnique(Technique technique);
@@ -69,6 +72,7 @@ signals:
     void primaryChanged(Primary primary);
     void techniqueChanged(Technique technique);
     void subTechniqueChanged(SubTechnique subTechnique);
+    void labelChanged();
 
 private:
     Primary m_primary;
