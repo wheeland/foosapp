@@ -2,9 +2,11 @@
     <qresource prefix="/">
         <file>qml/main.qml</file>
         <file>qml/LameButton.qml</file>
+        <file>qml/LameTopMenu.qml</file>
         <file>qml/Note.qml</file>
         <file>qml/NoteList.qml</file>
         <file>qml/CategorySelector.qml</file>
+        <file>qml/Style.qml</file>
     </qresource>
 </RCC>
 

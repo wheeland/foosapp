@@ -1,11 +1,9 @@
 import QtQuick 2.11
 
-import Foos 1.0 as Foos
-
 Rectangle {
     id: root
 
-    color: _style.colorBackground
+    color: "#e5e5e5"
 
     property Foos.Player player
 

@@ -8,13 +8,15 @@ Rectangle {
     property Foos.Note note
     property bool expanded: false
     property real padding: 8
+    property alias textFocus: text.focus
 
     signal selectCategory(var cat)
+    signal requestEdit()
 
-    color: "#eeeeee"
+    color: _style.colorArea
     clip: true
 
-    border.color: "#999999"
+    border.color: _style.colorBorder
     border.width: _scale
 
     height: content.height + 2 * padding * _scale
@@ -37,8 +39,8 @@ Rectangle {
 
         Text {
             id: categoryText
-            color: text.focus ? "#990000" : "#000000"
-            text: note.category.label
+            color: text.focus ? _style.colorTextHighlighted : _style.colorText
+            text: root.note ? note.category.label : ""
             font.pixelSize: 12 * _scale
             font.bold: true
         }
@@ -51,10 +53,10 @@ Rectangle {
             anchors.topMargin: root.padding * _scale
             height: (root.expanded || focus) ? implicitHeight
                                              : 2.5 * font.pixelSize
-            color: "#000000"
+            color: _style.colorText
             font.pixelSize: 11 * _scale
             wrapMode: TextInput.Wrap
-            text: note.text
+            text: root.note ? root.note.text : ""
         }
 
         Rectangle {
@@ -67,17 +69,14 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: root.selectCategory(note.category)
+                onClicked: root.selectCategory(root.note.category)
             }
         }
     }
 
     MouseArea {
         anchors.fill: content
-        onClicked: {
-            root.expanded = !root.expanded
-            root.focus = true;
-        }
-        onDoubleClicked: text.focus = true
+        onClicked: root.expanded = !root.expanded
+        onDoubleClicked: root.requestEdit()
     }
 }

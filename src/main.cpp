@@ -1,6 +1,8 @@
 #include <QGuiApplication>
 #include <QQuickView>
 #include <QQmlContext>
+#include <QQmlEngine>
+#include <QQmlComponent>
 
 #include "controller.h"
 
@@ -21,6 +23,11 @@ int main(int argc, char **argv)
     view.setResizeMode(QQuickView::SizeRootObjectToView);
     view.rootContext()->setContextProperty("_controller", &controller);
     view.rootContext()->setContextProperty("_scale", 2.0f);
+
+    QQmlComponent styleComponent(view.engine(), "qrc:/qml/Style.qml");
+    QObject *styleObject = styleComponent.create(view.rootContext());
+    view.rootContext()->setContextProperty("_style", styleObject);
+
     view.setSource(QUrl("qrc:/qml/main.qml"));
     view.show();
 
