@@ -7,14 +7,31 @@ Item {
 
     property Foos.Player player
 
-    Column {
-        Repeater {
-            model: root.player
-            delegate: Note {
-                width: root.width
-                note: model.note
+    Flickable {
+        anchors.fill: parent
 
-                onSelectCategory: categorySelector.show(cat)
+        contentHeight: noteColumn.height
+        contentWidth: noteColumn.width
+        flickableDirection: Flickable.VerticalFlick
+
+        FocusScope {
+            width: parent.width
+            height: noteColumn.height
+            focus: true
+
+            Column {
+                id: noteColumn
+                width: parent.width
+
+                Repeater {
+                    model: root.player
+                    delegate: Note {
+                        width: root.width
+                        note: model.note
+
+                        onSelectCategory: categorySelector.show(cat)
+                    }
+                }
             }
         }
     }

@@ -17,9 +17,10 @@ int main(int argc, char **argv)
     qmlRegisterUncreatableType<FoosController>("Foos", 1, 0, "Controller", "nope.");
 
     QQuickView view;
-    view.resize(920, 480);
+    view.resize(540, 960);
     view.setResizeMode(QQuickView::SizeRootObjectToView);
     view.rootContext()->setContextProperty("_controller", &controller);
+    view.rootContext()->setContextProperty("_scale", 2.0f);
     view.setSource(QUrl("qrc:/qml/main.qml"));
     view.show();
 

@@ -6,75 +6,78 @@ Rectangle {
     id: root
 
     property Foos.Note note
-    property alias expanded: text.visible
+    property bool expanded: false
+    property real padding: 8
 
     signal selectCategory(var cat)
 
-    color: "white"
+    color: "#eeeeee"
     clip: true
 
-    border.color: "red"
-    border.width: 1
+    border.color: "#999999"
+    border.width: _scale
 
-    height: {
-        var ret = categoryText.height;
-        if (text.visible)
-            ret += text.height;
-        return ret;
-    }
+    height: content.height + 2 * padding * _scale
 
-    Behavior on height {
-        NumberAnimation {
-            duration: 100
-        }
-    }
+    Item {
+        id: content
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.margins: root.padding * _scale
 
-    Text {
-        id: categoryText
-        width: parent.width
-        color: "blue"
-        text: note.category.label
+        height: childrenRect.height
+        clip: true
 
-        MouseArea {
-            anchors.fill: parent
-            onClicked: text.visible = !text.visible
-        }
-    }
-
-    Rectangle {
-        anchors.right: categoryText.right
-        anchors.verticalCenter: categoryText.verticalCenter
-        anchors.rightMargin: 5
-        width: 10
-        height: 10
-        color: "blue"
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: root.selectCategory(note.category)
-        }
-    }
-
-    Text {
-        id: text
-        visible: false
-        width: parent.width
-        y: categoryText.height
-        color: "green"
-        text: note.text
-    }
-
-    Loader {
-        id: categorySelector
-        active: false
-        source: "CategorySelector.qml"
-        anchors.centerIn: parent
-        width: 200
-        height: 200
-        onItemChanged: {
-            if (item !== null) {
-                item.show(root.note.category)
+        Behavior on height {
+            NumberAnimation {
+                duration: 100
             }
         }
+
+        Text {
+            id: categoryText
+            color: text.focus ? "#990000" : "#000000"
+            text: note.category.label
+            font.pixelSize: 12 * _scale
+            font.bold: true
+        }
+
+        TextEdit {
+            id: text
+            anchors.top: categoryText.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.topMargin: root.padding * _scale
+            height: (root.expanded || focus) ? implicitHeight
+                                             : 2.5 * font.pixelSize
+            color: "#000000"
+            font.pixelSize: 11 * _scale
+            wrapMode: TextInput.Wrap
+            text: note.text
+        }
+
+        Rectangle {
+            anchors.right: parent.right
+            anchors.verticalCenter: categoryText.verticalCenter
+            anchors.rightMargin: 5
+            width: 10
+            height: 10
+            color: "blue"
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: root.selectCategory(note.category)
+            }
+        }
+    }
+
+    MouseArea {
+        anchors.fill: content
+        onClicked: {
+            root.expanded = !root.expanded
+            root.focus = true;
+        }
+        onDoubleClicked: text.focus = true
     }
 }

@@ -65,16 +65,28 @@ Model_V0 stringToModel(const QString &string)
     Model_V0 out;
     stream >> out;
     return out;
+}
 
+QString randStr(int len)
+{
+    QString ret;
+    for (int i = 0; i < len; ) {
+        const int len = 2 + qrand() % 6;
+        for (int j = 0; j < len; ++j)
+            ret += ('a' + qrand() % 26);
+        ret += (qrand() % 10 < 3) ? '\n' : ' ';
+        i += len;
+    }
+    return ret;
 }
 
 Model_V0 dummy()
 {
     Model_V0 ret;
-    ret.myself << QPair<int, QString>(0x030102, "Test Foobar");
-    ret.myself << QPair<int, QString>(0x030102, "Test Bar Bar");
-    ret.myself << QPair<int, QString>(0x040103, "Test Ficker");
-    ret.myself << QPair<int, QString>(0x010203, "yolo");
+    ret.myself << QPair<int, QString>(0x030102, randStr(100));
+    ret.myself << QPair<int, QString>(0x030102, randStr(200));
+    ret.myself << QPair<int, QString>(0x040103, randStr(300));
+    ret.myself << QPair<int, QString>(0x010203, randStr(400));
     return ret;
 }
 

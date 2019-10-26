@@ -16,14 +16,14 @@ Rectangle {
     color: mouse.pressed ? clickColor : baseColor
 
     border.color: borderColor
-    border.width: 2
+    border.width: 2 * _scale
 
-    width: text.width + 10
-    height: text.height + 8
+    width: text.width + 10 * _scale
+    height: text.height + 8 * _scale
 
     Text {
         id: text
-        font.pixelSize: 12.0
+        font.pixelSize: 12.0 * _scale
         anchors.centerIn: parent
         color: root.textColor
     }
