@@ -26,6 +26,8 @@ struct Model_V0
     Notes training;
 };
 
+Model_V0 dummy();
+
 QString modelToString(const Model_V0 &model);
 Model_V0 stringToModel(const QString &string);
 

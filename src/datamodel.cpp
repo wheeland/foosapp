@@ -68,4 +68,14 @@ Model_V0 stringToModel(const QString &string)
 
 }
 
+Model_V0 dummy()
+{
+    Model_V0 ret;
+    ret.myself << QPair<int, QString>(0x030102, "Test Foobar");
+    ret.myself << QPair<int, QString>(0x030102, "Test Bar Bar");
+    ret.myself << QPair<int, QString>(0x040103, "Test Ficker");
+    ret.myself << QPair<int, QString>(0x010203, "yolo");
+    return ret;
+}
+
 } //namespace DataModel
