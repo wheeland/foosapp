@@ -69,20 +69,6 @@ Rectangle {
             wrapMode: TextInput.Wrap
             text: root.note ? root.note.text : ""
         }
-
-        Rectangle {
-            anchors.right: parent.right
-            anchors.verticalCenter: categoryText.verticalCenter
-            anchors.rightMargin: 5
-            width: 10
-            height: 10
-            color: "blue"
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: root.selectCategory(root.note.category)
-            }
-        }
     }
 
     MouseArea {
