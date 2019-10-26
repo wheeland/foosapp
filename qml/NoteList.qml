@@ -17,62 +17,69 @@ Rectangle {
     }
 
     //
-    // Scroll View of all notes
+    // Top Menu
     //
-    Flickable {
-        visible: !d.editing
-        anchors.fill: parent
+    LameTopMenu {
+        id: menu
+        height: 40 * _scale
 
-        contentHeight: noteColumn.height
-        contentWidth: noteColumn.width
-
-        Column {
-            id: noteColumn
-            width: root.width
-            spacing: d.padding * _scale
-            padding: d.padding * _scale
-
-            Repeater {
-                model: root.player
-                delegate: Note {
-                    width: root.width - 2 * d.padding * _scale
-                    note: model.note
-
-                    onSelectCategory: categorySelector.show(cat)
-                    onRequestEdit: d.editNote = model.note
-                }
-            }
+        LameMenuButton {
+            text: "Back"
+            x: 10 * _scale
+            anchors.verticalCenter: parent.verticalCenter
+            onClicked: d.editNote = null
         }
     }
 
-    //
-    // Note that is being edited, on top of everything else
-    //
     Item {
-        id: editItem
-        visible: d.editing
-        anchors.fill: parent
+        id: body
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: menu.bottom
+            bottom: parent.bottom
+        }
 
-        LameTopMenu {
-            id: editMenu
-            height: 50 * _scale
+        //
+        // Scroll View of all notes
+        //
+        Flickable {
+//            visible: !d.editing   // MouseArea won't get release event if invisible
+            anchors.fill: parent
 
-            LameMenuButton {
-                text: "Save"
-                x: 50 * _scale
-                y: 20 * _scale
-                onClicked: d.editNote = null
+            contentHeight: noteColumn.height
+            contentWidth: noteColumn.width
+
+            Column {
+                id: noteColumn
+                width: root.width
+                spacing: d.padding * _scale
+                padding: d.padding * _scale
+
+                Repeater {
+                    model: root.player
+                    delegate: Note {
+                        width: root.width - 2 * d.padding * _scale
+                        note: model.note
+
+                        onSelectCategory: categorySelector.show(cat)
+                        onRequestEdit: d.editNote = model.note
+                    }
+                }
             }
         }
 
+        //
+        // Note that is being edited, on top of everything else
+        //
         Note {
+            visible: d.editing
             anchors.fill: parent
-            anchors.topMargin: editMenu.height
+            anchors.margins: d.padding * _scale
             textFocus: true
             note: d.editNote
             animating: false
         }
-
     }
 
     CategorySelector {
