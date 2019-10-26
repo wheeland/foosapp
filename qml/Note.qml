@@ -73,6 +73,7 @@ Rectangle {
 
     MouseArea {
         anchors.fill: content
+        visible: !root.textFocus
         onClicked: root.expanded = !root.expanded
         onDoubleClicked: editRequestedTimer.start()
     }
