@@ -12,5 +12,6 @@ Rectangle {
         anchors.fill: parent
         anchors.margins: 10
         player: _controller.myself
+        title: "Knoweth Thyself"
     }
 }

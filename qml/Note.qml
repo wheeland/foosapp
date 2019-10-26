@@ -20,6 +20,12 @@ Rectangle {
         delay: 100
     }
 
+    SingleshotTimer {
+        id: expandTimer
+        action: root.expanded = !root.expanded
+        delay: 100
+    }
+
     function save() {
         root.note.text = text.text;
     }
@@ -74,7 +80,10 @@ Rectangle {
     MouseArea {
         anchors.fill: content
         visible: !root.textFocus
-        onClicked: root.expanded = !root.expanded
-        onDoubleClicked: editRequestedTimer.start()
+        onClicked: expandTimer.start()
+        onDoubleClicked: {
+            expandTimer.stop();
+            editRequestedTimer.start();
+        }
     }
 }

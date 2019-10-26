@@ -8,6 +8,7 @@ Rectangle {
     color: _style.colorBackground
 
     property Foos.Player player
+    property alias title: titleText.text
 
     QtObject {
         id: d
@@ -69,6 +70,8 @@ Rectangle {
             bottom: parent.bottom
         }
 
+        clip: true
+
         //
         // Scroll View of all notes
         //
@@ -84,6 +87,14 @@ Rectangle {
                 width: root.width
                 spacing: d.padding * _scale
                 padding: d.padding * _scale
+
+                Text {
+                    id: titleText
+                    color: _style.colorText
+                    font.pixelSize: 13 * _scale
+                    font.bold: true
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
 
                 Repeater {
                     model: root.player
