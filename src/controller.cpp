@@ -38,35 +38,113 @@ void Category::fromInt(int i)
 
 QString Category::label() const
 {
-    const QStringList primaries {
-        "", "3 Offensive", "5 Offensive", "5 Defensive", "2 Offensive", "2-to-5", "Mindset"
-    };
-    const QStringList techniques {
-        "", "Pin-Shot", "Jet", "Pullshot", "Back-Pin", "Tic-Tac"
-    };
-    const QStringList subtechniques {
-        "", "Left", "Half-Left", "Middle", "Half-Right", "Right"
-    };
-
-    const QString prim = primaries.value((int) m_primary);
-    if (prim.isEmpty())
+    if (m_primary == PrimNone)
         return "Uncategorized";
 
-    const QString tech = techniques.value((int) m_technique);
-    const QString subtech = subtechniques.value((int) m_subTechnique);
-
-    QString ret = prim;
-    if (!tech.isEmpty()) {
+    QString ret = primaryName(m_primary);
+    if (m_technique != TechNone) {
         ret += ": ";
-        ret += tech;
+        ret += techniqueName(m_technique);
 
-        if (!subtech.isEmpty()) {
+        if (m_subTechnique != SubTechNone) {
             ret += ": ";
-            ret += subtech;
+            ret += subTechniqueName(m_subTechnique);
         }
     }
 
     return ret;
+}
+
+bool Category::isTechniqueValid(Category::Primary primary, Category::Technique technique)
+{
+    if (primary != PrimFiveBarOffensive && primary != PrimTwoBarOffensive)
+        return false;
+    return true;
+}
+
+bool Category::isSubTechniqueValid(Primary primary, Category::Technique technique, Category::SubTechnique subTechnique)
+{
+    if (primary != PrimFiveBarOffensive && primary != PrimTwoBarOffensive)
+        return false;
+
+    if (technique == TechNone || technique == TechPull || technique == TechPush || technique >= TechCount)
+        return false;
+
+    return true;
+}
+
+QVector<int> Category::validPrimaries()
+{
+    return QVector<int> {
+        PrimNone,
+        PrimThreeBarOffensive,
+        PrimFiveBarOffensive,
+        PrimFiveBarDefensive,
+        PrimTwoBarOffensive,
+        PrimTwoToFive,
+        PrimMindeset,
+    };
+}
+
+QVector<int> Category::validTechniques(Category::Primary primary)
+{
+    if (primary == PrimThreeBarOffensive || primary == PrimTwoBarOffensive) {
+        return QVector<int> {
+            TechNone,
+            TechPinShot,
+            TechJet,
+            TechPull,
+            TechPush,
+            TechBackpin,
+            TechTicTac
+        };
+    }
+
+    return QVector<int>{ TechNone };
+}
+
+QVector<int> Category::validSubTechniques(Category::Primary primary, Category::Technique technique)
+{
+    if (technique == TechNone)
+        return QVector<int>{ SubTechNone };
+
+    if (primary == PrimThreeBarOffensive || primary == PrimTwoBarOffensive) {
+        return QVector<int> {
+            SubTechNone,
+            SubTechLeft,
+            SubTechHalfLeft,
+            SubTechMidle,
+            SubTechHalfRight,
+            SubTechRight,
+            SubTechWandering
+        };
+    }
+
+    return QVector<int>{ SubTechNone };
+}
+
+QString Category::primaryName(Category::Primary primary)
+{
+    const QStringList primaries {
+        "None", "3 Offensive", "5 Offensive", "5 Defensive", "2 Offensive", "2-to-5", "Mindset"
+    };
+    return primaries.value((int) primary);
+}
+
+QString Category::techniqueName(Category::Technique technique)
+{
+    const QStringList techniques {
+        "None", "Pin-Shot", "Jet", "Pullshot", "Back-Pin", "Tic-Tac"
+    };
+    return techniques.value((int) technique);
+}
+
+QString Category::subTechniqueName(Category::SubTechnique subTechnique)
+{
+    const QStringList subtechniques {
+        "None", "Left", "Half-Left", "Middle", "Half-Right", "Right"
+    };
+    return subtechniques.value((int) subTechnique);
 }
 
 void Category::setPrimary(Category::Primary primary)

@@ -25,6 +25,7 @@ public:
         PrimTwoBarOffensive,
         PrimTwoToFive,
         PrimMindeset,
+        PrimCount,
     };
     Q_ENUM(Primary)
 
@@ -34,8 +35,10 @@ public:
         TechPinShot,
         TechJet,
         TechPull,
+        TechPush,
         TechBackpin,
-        TechTicTac
+        TechTicTac,
+        TechCount
     };
     Q_ENUM(Technique)
 
@@ -48,6 +51,7 @@ public:
         SubTechHalfRight,
         SubTechRight,
         SubTechWandering,
+        SubTechCount
     };
     Q_ENUM(SubTechnique)
 
@@ -62,6 +66,17 @@ public:
     void fromInt(int i);
 
     QString label() const;
+
+    Q_INVOKABLE static bool isTechniqueValid(Primary primary, Technique technique);
+    Q_INVOKABLE static bool isSubTechniqueValid(Primary primary, Technique technique, SubTechnique subTechnique);
+
+    Q_INVOKABLE static QVector<int> validPrimaries();
+    Q_INVOKABLE static QVector<int> validTechniques(Primary primary);
+    Q_INVOKABLE static QVector<int> validSubTechniques(Primary primary, Technique technique);
+
+    Q_INVOKABLE static QString primaryName(Primary primary);
+    Q_INVOKABLE static QString techniqueName(Technique technique);
+    Q_INVOKABLE static QString subTechniqueName(SubTechnique subTechnique);
 
 public slots:
     void setPrimary(Primary primary);
