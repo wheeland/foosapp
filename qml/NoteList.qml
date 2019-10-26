@@ -53,19 +53,24 @@ Rectangle {
         visible: d.editing
         anchors.fill: parent
 
-        Row {
-            id: editButtonRow
+        LameTopMenu {
+            id: editMenu
+            height: 50 * _scale
 
-            LameButton {
-                text: "Change Category"
+            LameMenuButton {
+                text: "Save"
+                x: 50 * _scale
+                y: 20 * _scale
+                onClicked: d.editNote = null
             }
         }
 
         Note {
             anchors.fill: parent
-            anchors.topMargin: 100
-            note: d.editNote
+            anchors.topMargin: editMenu.height
             textFocus: true
+            note: d.editNote
+            animating: false
         }
 
     }

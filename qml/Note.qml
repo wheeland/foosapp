@@ -8,6 +8,7 @@ Rectangle {
     property Foos.Note note
     property bool expanded: false
     property real padding: 8
+    property bool animating: true
     property alias textFocus: text.focus
 
     signal selectCategory(var cat)
@@ -33,7 +34,7 @@ Rectangle {
 
         Behavior on height {
             NumberAnimation {
-                duration: 100
+                duration: root.animating ? 100 : 0
             }
         }
 
