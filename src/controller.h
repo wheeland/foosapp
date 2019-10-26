@@ -90,9 +90,9 @@ signals:
     void labelChanged();
 
 private:
-    Primary m_primary;
-    Technique m_technique;
-    SubTechnique m_subTechnique;
+    Primary m_primary = PrimNone;
+    Technique m_technique = TechNone;
+    SubTechnique m_subTechnique = SubTechNone;
 };
 
 class Note : public QObject
@@ -151,8 +151,8 @@ public:
     void setLastUpdate(const QDateTime &time);
     Q_INVOKABLE void touchLastUpdate();
 
-    Note *newNote();
-    void removeNote(Note *note);
+    Q_INVOKABLE Note *newNote();
+    Q_INVOKABLE void removeNote(Note *note);
     QVector<Note*> notes() const;
 
 public slots:

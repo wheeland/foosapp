@@ -269,7 +269,7 @@ void Player::touchLastUpdate()
 
 Note *Player::newNote()
 {
-    Note *note = new Note();
+    Note *note = new Note(this);
     beginInsertRows(QModelIndex(), m_notes.size(), m_notes.size());
     m_notes << note;
     endInsertRows();
