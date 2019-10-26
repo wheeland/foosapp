@@ -106,7 +106,6 @@ public:
     Note(QObject *parent = nullptr);
     ~Note() = default;
 
-//    QString title() const { return m_title; }
     QString text() const;
     Category *category() const;
 
@@ -115,15 +114,11 @@ public slots:
 
 signals:
     void textChanged(QString text);
-//    void titleChanged(QString title);
 
 private:
     QString m_text;
-//    QString m_title;
     Category *m_category;
 };
-
-
 
 class Player : public QAbstractListModel
 {
