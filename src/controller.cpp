@@ -249,6 +249,24 @@ QString Player::secondName() const
     return m_secondName;
 }
 
+void Player::setFirstName(QString firstName)
+{
+    if (m_firstName == firstName)
+        return;
+
+    m_firstName = firstName;
+    emit firstNameChanged(m_firstName);
+}
+
+void Player::setSecondName(QString secondName)
+{
+    if (m_secondName == secondName)
+        return;
+
+    m_secondName = secondName;
+    emit secondNameChanged(m_secondName);
+}
+
 QDateTime Player::lastUpdate() const
 {
     return m_lastUpdate;
@@ -270,6 +288,12 @@ void Player::touchLastUpdate()
 Note *Player::newNote()
 {
     Note *note = new Note(this);
+
+    // make sure to inform sorting models
+    connect(note->category(), &Category::primaryChanged, this, &Player::categoriesChanged);
+    connect(note->category(), &Category::techniqueChanged, this, &Player::categoriesChanged);
+    connect(note->category(), &Category::subTechniqueChanged, this, &Player::categoriesChanged);
+
     beginInsertRows(QModelIndex(), m_notes.size(), m_notes.size());
     m_notes << note;
     endInsertRows();
@@ -296,22 +320,34 @@ QVector<Note *> Player::notes() const
     return m_notes;
 }
 
-void Player::setFirstName(QString firstName)
+NotesSortModel::NotesSortModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
 {
-    if (m_firstName == firstName)
-        return;
+    connect(this, &QSortFilterProxyModel::sourceModelChanged, this, [=]() {
+        sort(0);
 
-    m_firstName = firstName;
-    emit firstNameChanged(m_firstName);
+        Player *player = qobject_cast<Player*>(sourceModel());
+        if (player) {
+            connect(player, &Player::categoriesChanged, this, [=]() {
+                invalidate();
+                sort(0);
+            });
+        }
+    });
 }
 
-void Player::setSecondName(QString secondName)
+bool NotesSortModel::lessThan(const QModelIndex &lhs, const QModelIndex &rhs) const
 {
-    if (m_secondName == secondName)
-        return;
+    Note *left = sourceModel()->data(lhs, Player::NoteRole).value<Note*>();
+    Note *right = sourceModel()->data(rhs, Player::NoteRole).value<Note*>();
+    if (!left || !right)
+        return false;
+    return left->category()->toInt() <= right->category()->toInt();
+}
 
-    m_secondName = secondName;
-    emit secondNameChanged(m_secondName);
+void NotesSortModel::doSort()
+{
+    sort(0);
 }
 
 // -----------------------------------------

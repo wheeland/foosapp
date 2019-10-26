@@ -10,6 +10,12 @@ Rectangle {
     property Foos.Player player
     property alias title: titleText.text
 
+    Foos.NotesSortModel {
+        id: sortedNotes
+        sourceModel: player
+        dynamicSortFilter: true
+    }
+
     QtObject {
         id: d
         property Foos.Note editNote
@@ -97,7 +103,7 @@ Rectangle {
                 }
 
                 Repeater {
-                    model: root.player
+                    model: sortedNotes
                     delegate: Note {
                         width: root.width - 2 * d.padding * _scale
                         note: model.note

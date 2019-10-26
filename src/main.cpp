@@ -16,6 +16,7 @@ int main(int argc, char **argv)
     qmlRegisterType<Category>("Foos", 1, 0, "Category");
     qmlRegisterType<Note>("Foos", 1, 0, "Note");
     qmlRegisterType<Player>("Foos", 1, 0, "Player");
+    qmlRegisterType<NotesSortModel>("Foos", 1, 0, "NotesSortModel");
     qmlRegisterUncreatableType<FoosController>("Foos", 1, 0, "Controller", "nope.");
 
     QQuickView view;

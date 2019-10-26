@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QAbstractListModel>
+#include <QSortFilterProxyModel>
 #include <QDateTime>
 
 #include "controller.h"
@@ -158,12 +159,24 @@ signals:
     void firstNameChanged(QString firstName);
     void secondNameChanged(QString secondName);
     void lastUpdateChanged(QDateTime lastUpdate);
+    void categoriesChanged();
 
 private:
     QString m_firstName;
     QString m_secondName;
     QVector<Note*> m_notes;
     QDateTime m_lastUpdate;
+    friend class NotesSortModel;
+};
+
+class NotesSortModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+
+public:
+    NotesSortModel(QObject *parent = nullptr);
+    bool lessThan(const QModelIndex &lhs, const QModelIndex &rhs) const override;
+    Q_INVOKABLE void doSort();
 };
 
 class FoosController : public QAbstractListModel
