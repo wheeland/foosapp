@@ -117,8 +117,8 @@ Rectangle {
         CategorySelector {
             id: categorySelector
             anchors.centerIn: parent
-            width: 200
-            height: 200
+            width: 200 * _scale
+            height: 200 * _scale
         }
     }
 }

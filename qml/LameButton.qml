@@ -5,10 +5,10 @@ Rectangle {
 
     property alias text: text.text
 
-    property color baseColor: "#222222"
+    property color baseColor: _style.colorArea
     property color clickColor: "#555555"
-    property color borderColor: "#cccccc"
-    property color textColor: "#ffffff"
+    property color borderColor: _style.colorBorder
+    property color textColor: _style.colorText
 
     signal clicked()
     signal pressAndHold()
@@ -16,7 +16,7 @@ Rectangle {
     color: mouse.pressed ? clickColor : baseColor
 
     border.color: borderColor
-    border.width: 2 * _scale
+    border.width: _scale
 
     width: text.width + 10 * _scale
     height: text.height + 8 * _scale

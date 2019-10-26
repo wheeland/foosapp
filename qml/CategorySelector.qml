@@ -13,6 +13,7 @@ Rectangle {
         property int stage
         property var options
         property int optionCount
+        readonly property real padding: 4
 
         function next(index) {
             if (stage === 0) {
@@ -56,16 +57,15 @@ Rectangle {
         d.stage = 0;
     }
 
-    color: "white"
+    color: _style.colorMenu
     clip: true
 
-    border.color: "black"
-    border.width: 1
+    border.color: _style.colorBorder
+    border.width: _scale
 
     Flickable {
         id: flickable
         anchors.fill: parent
-        anchors.margins: 2
 
         contentHeight: content.height
         contentWidth: content.width
@@ -73,14 +73,14 @@ Rectangle {
         Column {
             id: content
             width: flickable.width
-            spacing: 3
-            padding: 3
+            spacing: d.padding * _scale
+            padding: d.padding * _scale
 
             Repeater {
                 id: repeater
                 model: d.optionCount
                 delegate: LameButton {
-                    width: content.width - 10
+                    width: content.width - 2 * d.padding * _scale
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: {
                         if (d.category == null)
