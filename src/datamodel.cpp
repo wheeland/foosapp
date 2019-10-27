@@ -67,26 +67,46 @@ Model_V0 stringToModel(const QString &string)
     return out;
 }
 
+QString randWord()
+{
+    QString ret;
+    const int len = 2 + qrand() % 6;
+    for (int j = 0; j < len; ++j)
+        ret += ('a' + qrand() % 26);
+    return ret;
+}
+
 QString randStr(int len)
 {
     QString ret;
-    for (int i = 0; i < len; ) {
-        const int len = 2 + qrand() % 6;
-        for (int j = 0; j < len; ++j)
-            ret += ('a' + qrand() % 26);
+    for (int i = 0; i < len; ++i) {
+        ret += randWord();
         ret += (qrand() % 10 < 3) ? '\n' : ' ';
-        i += len;
     }
+    return ret;
+}
+
+Notes dummyNotes()
+{
+    Notes ret;
+    ret << QPair<int, QString>(0x030102, randStr(30));
+    ret << QPair<int, QString>(0x030102, randStr(40));
+    ret << QPair<int, QString>(0x040103, randStr(50));
+    ret << QPair<int, QString>(0x010203, randStr(60));
     return ret;
 }
 
 Model_V0 dummy()
 {
     Model_V0 ret;
-    ret.myself << QPair<int, QString>(0x030102, randStr(100));
-    ret.myself << QPair<int, QString>(0x030102, randStr(200));
-    ret.myself << QPair<int, QString>(0x040103, randStr(300));
-    ret.myself << QPair<int, QString>(0x010203, randStr(400));
+    ret.myself = dummyNotes();
+    ret.training = dummyNotes();
+    for (int i = 0; i < 20; ++i) {
+        QString first = randWord();
+        QString last = randWord();
+        Player player{ first, last, QDateTime::currentDateTime() };
+        ret.players[player] = dummyNotes();
+    }
     return ret;
 }
 
