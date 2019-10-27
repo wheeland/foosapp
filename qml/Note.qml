@@ -9,25 +9,12 @@ Rectangle {
     property bool expanded: false
     property real padding: 8
     property bool animating: true
-    property alias textFocus: text.focus
-
-    signal selectCategory(var cat)
-    signal editRequested()
-
-    SingleshotTimer {
-        id: editRequestedTimer
-        action: root.editRequested()
-        delay: 100
-    }
+    property alias textFocus: textEdit.focus
 
     SingleshotTimer {
         id: expandTimer
         action: root.expanded = !root.expanded
         delay: 100
-    }
-
-    function save() {
-        root.note.text = text.text;
     }
 
     color: _style.colorArea
@@ -56,14 +43,14 @@ Rectangle {
 
         Text {
             id: categoryText
-            color: text.focus ? _style.colorTextHighlighted : _style.colorText
+            color: textEdit.focus ? _style.colorTextHighlighted : _style.colorText
             text: root.note ? note.category.label : ""
             font.pixelSize: 12 * _scale
             font.bold: true
         }
 
         TextEdit {
-            id: text
+            id: textEdit
             anchors.top: categoryText.bottom
             anchors.left: parent.left
             anchors.right: parent.right
@@ -74,6 +61,10 @@ Rectangle {
             font.pixelSize: 11 * _scale
             wrapMode: TextInput.Wrap
             text: root.note ? root.note.text : ""
+            onTextChanged: {
+                if (root.note)
+                    root.note.text = text;
+            }
         }
     }
 
@@ -81,9 +72,6 @@ Rectangle {
         anchors.fill: content
         visible: !root.textFocus
         onClicked: expandTimer.start()
-        onDoubleClicked: {
-            expandTimer.stop();
-            editRequestedTimer.start();
-        }
+        onDoubleClicked: _controller.goToNoteEdit(root.note)
     }
 }

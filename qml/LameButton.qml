@@ -6,7 +6,7 @@ Rectangle {
     property alias text: text.text
 
     property color baseColor: _style.colorArea
-    property color clickColor: "#555555"
+    property color clickColor: _style.colorClick
     property color borderColor: _style.colorBorder
     property color textColor: _style.colorText
 

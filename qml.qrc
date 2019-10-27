@@ -7,6 +7,8 @@
         <file>qml/Note.qml</file>
         <file>qml/NoteList.qml</file>
         <file>qml/CategorySelector.qml</file>
+        <file>qml/PlayerList.qml</file>
+        <file>qml/PlayerNamePage.qml</file>
         <file>qml/Style.qml</file>
         <file>qml/SingleshotTimer.qml</file>
     </qresource>
