@@ -5,7 +5,6 @@
 #include <QSortFilterProxyModel>
 #include <QDateTime>
 
-#include "controller.h"
 #include "datamodel.h"
 
 class Category : public QObject
@@ -179,7 +178,7 @@ public:
     Q_INVOKABLE void doSort();
 };
 
-class FoosController : public QAbstractListModel
+class Database : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(Player *training READ training CONSTANT)
@@ -190,8 +189,8 @@ class FoosController : public QAbstractListModel
     };
 
 public:
-    FoosController(const DataModel::Model_V0 &model_v0, QObject *parent = nullptr);
-    ~FoosController() = default;
+    Database(const DataModel::Model_V0 &model_v0, QObject *parent = nullptr);
+    ~Database() = default;
 
     int rowCount(const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &index, int role) const override;

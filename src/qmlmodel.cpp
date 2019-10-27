@@ -1,4 +1,4 @@
-#include "controller.h"
+#include "qmlmodel.h"
 
 #include <QDebug>
 
@@ -353,7 +353,7 @@ void NotesSortModel::doSort()
 // -----------------------------------------
 //        FoosController
 // -----------------------------------------
-FoosController::FoosController(const DataModel::Model_V0 &model_v0, QObject *parent)
+Database::Database(const DataModel::Model_V0 &model_v0, QObject *parent)
     : QAbstractListModel(parent)
 {
     const auto addPlayer = [&](const DataModel::Notes &notes) -> Player* {
@@ -380,12 +380,12 @@ FoosController::FoosController(const DataModel::Model_V0 &model_v0, QObject *par
     }
 }
 
-int FoosController::rowCount(const QModelIndex &parent) const
+int Database::rowCount(const QModelIndex &parent) const
 {
     return m_players.size();
 }
 
-QVariant FoosController::data(const QModelIndex &index, int role) const
+QVariant Database::data(const QModelIndex &index, int role) const
 {
     const int idx = index.row();
     if (idx < 0 || idx >= m_players.size()) {
@@ -401,14 +401,14 @@ QVariant FoosController::data(const QModelIndex &index, int role) const
     }
 }
 
-QHash<int, QByteArray> FoosController::roleNames() const
+QHash<int, QByteArray> Database::roleNames() const
 {
     QHash<int, QByteArray> ret;
     ret[PlayerRole] = "player";
     return ret;
 }
 
-DataModel::Model_V0 FoosController::toModel_V0() const
+DataModel::Model_V0 Database::toModel_V0() const
 {
     DataModel::Model_V0 ret;
 

@@ -4,25 +4,25 @@
 #include <QQmlEngine>
 #include <QQmlComponent>
 
-#include "controller.h"
+#include "qmlmodel.h"
 
 int main(int argc, char **argv)
 {
     QGuiApplication app(argc, argv);
 
     DataModel::Model_V0 model = DataModel::dummy();
-    FoosController controller(model);
+    Database database(model);
 
     qmlRegisterType<Category>("Foos", 1, 0, "Category");
     qmlRegisterType<Note>("Foos", 1, 0, "Note");
     qmlRegisterType<Player>("Foos", 1, 0, "Player");
     qmlRegisterType<NotesSortModel>("Foos", 1, 0, "NotesSortModel");
-    qmlRegisterUncreatableType<FoosController>("Foos", 1, 0, "Controller", "nope.");
+    qmlRegisterUncreatableType<Database>("Foos", 1, 0, "Database", "nope.");
 
     QQuickView view;
     view.resize(540, 960);
     view.setResizeMode(QQuickView::SizeRootObjectToView);
-    view.rootContext()->setContextProperty("_controller", &controller);
+    view.rootContext()->setContextProperty("_controller", &database);
     view.rootContext()->setContextProperty("_scale", 2.0f);
 
     QQmlComponent styleComponent(view.engine(), "qrc:/qml/Style.qml");

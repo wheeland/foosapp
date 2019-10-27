@@ -7,12 +7,12 @@ QT += qml quick
 SOURCES += \
     src/main.cpp \
     src/app.cpp \
-    src/controller.cpp \
+    src/qmlmodel.cpp \
     src/datamodel.cpp \
 
 HEADERS += \
     src/app.h \
-    src/controller.h \
+    src/qmlmodel.h \
     src/datamodel.h \
 
 RESOURCES += \
