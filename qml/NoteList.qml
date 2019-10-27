@@ -123,8 +123,9 @@ Rectangle {
             visible: d.editing
             anchors.fill: parent
             anchors.margins: d.padding * _scale
-            textFocus: true
+            textFocus: !categorySelector.visible
             note: d.editNote
+            expanded: true
             animating: false
         }
 
