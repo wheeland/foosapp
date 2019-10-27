@@ -2,12 +2,6 @@
 
 #include <QDataStream>
 
-bool operator==(const DataModel::Player &lhs, const DataModel::Player &rhs)
-{
-    return lhs.firstName == rhs.firstName
-            && lhs.lastName == rhs.lastName;
-}
-
 QDataStream &operator<<(QDataStream &stream, const DataModel::Player &player)
 {
     stream << player.firstName;
@@ -46,6 +40,12 @@ namespace DataModel
 int qHash(const Player &player)
 {
     return qHash(player.firstName) ^ qHash(player.lastName);
+}
+
+bool operator==(const Player &lhs, const Player &rhs)
+{
+    return lhs.firstName == rhs.firstName
+            && lhs.lastName == rhs.lastName;
 }
 
 QByteArray Model_V0::toString() const

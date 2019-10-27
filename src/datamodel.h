@@ -17,6 +17,7 @@ struct Player
     QDateTime lastUpdate;
 };
 
+bool operator==(const Player &lhs, const Player &rhs);
 int qHash(const Player &player);
 
 struct Model_V0
@@ -35,5 +36,3 @@ struct Model_V0
 Model_V0 dummy();
 
 } //namespace DataModel
-
-bool operator==(const DataModel::Player &lhs, const DataModel::Player &rhs);
