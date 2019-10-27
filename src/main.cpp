@@ -3,6 +3,7 @@
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QQmlComponent>
+#include <QScreen>
 
 #include <QFile>
 #include <QDir>
@@ -58,11 +59,17 @@ int main(int argc, char **argv)
     qmlRegisterUncreatableType<Database>("Foos", 1, 0, "Database", "nope.");
     qmlRegisterUncreatableType<Controller>("Foos", 1, 0, "Controller", "nope.");
 
+#ifdef Q_OS_ANDROID
+    const QSize screenSize = app.primaryScreen()->size();
+#else
+    const QSize screenSize = QSize(540, 920);
+#endif
+
     QQuickView view;
-    view.resize(540, 960);
+    view.resize(screenSize);
     view.setResizeMode(QQuickView::SizeRootObjectToView);
     view.rootContext()->setContextProperty("_controller", &controller);
-    view.rootContext()->setContextProperty("_scale", 2.0f);
+    view.rootContext()->setContextProperty("_scale", screenSize.width() / 240.0f);
 
     QQmlComponent styleComponent(view.engine(), "qrc:/qml/Style.qml");
     QObject *styleObject = styleComponent.create(view.rootContext());
