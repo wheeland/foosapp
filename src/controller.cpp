@@ -60,8 +60,10 @@ void Controller::menuClicked(int index)
     case PlayersList: {
         if (index == 0)
             goToStartPage();
-        else if (index == 1)
-            qFatal("todo");
+        else if (index == 1) {
+            goToNotesList(m_database->addNewPlayer());
+            emit showEditPlayerName();
+        }
         break;
     }
     case NotesList: {

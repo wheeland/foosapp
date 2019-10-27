@@ -434,6 +434,15 @@ DataModel::Model_V0 Database::toModel_V0() const
     return ret;
 }
 
+Player *Database::addNewPlayer()
+{
+    Player *player = new Player(this);
+    beginInsertRows(QModelIndex(), m_players.size(), m_players.size());
+    m_players << player;
+    endInsertRows();
+    return player;
+}
+
 void Note::setText(QString text)
 {
     if (m_text == text)

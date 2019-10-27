@@ -24,12 +24,15 @@ struct Model_V0
     QHash<Player, Notes> players;
     Notes myself;
     Notes training;
+
+    QByteArray toString() const;
+    bool fromString(const QByteArray &string);
+
+    bool operator==(const Model_V0 &other) const;
+    bool operator!=(const Model_V0 &other) const { return !(*this == other); }
 };
 
 Model_V0 dummy();
-
-QString modelToString(const Model_V0 &model);
-Model_V0 stringToModel(const QString &string);
 
 } //namespace DataModel
 

@@ -4,14 +4,50 @@
 #include <QQmlEngine>
 #include <QQmlComponent>
 
+#include <QFile>
+#include <QDir>
+
 #include "qmlmodel.h"
 #include "controller.h"
+
+static QString DEFAULT_PATH = QString("data.bin");
+
+static QString getDateString(const QDateTime &dt)
+{
+    return QString::asprintf("%d_%d_%d_%d_%d_%d.bin",
+                             dt.date().year(),
+                             dt.date().month(),
+                             dt.date().day(),
+                             dt.time().hour(),
+                             dt.time().minute(),
+                             dt.time().second());
+}
+
+DataModel::Model_V0 loadModel(const QString &path)
+{
+    DataModel::Model_V0 ret;
+
+    QFile data(path);
+    if (data.exists() && data.open(QIODevice::ReadOnly)) {
+        ret.fromString(data.readAll());
+    }
+
+    return ret;
+}
+
+void saveModel(const DataModel::Model_V0 &model, const QString &path)
+{
+    QFile data(path);
+    if (data.open(QIODevice::WriteOnly)) {
+        data.write(model.toString());
+    }
+}
 
 int main(int argc, char **argv)
 {
     QGuiApplication app(argc, argv);
 
-    DataModel::Model_V0 model = DataModel::dummy();
+    DataModel::Model_V0 model = loadModel(DEFAULT_PATH);
     Database database(model);
     Controller controller(&database);
 
@@ -35,5 +71,13 @@ int main(int argc, char **argv)
     view.setSource(QUrl("qrc:/qml/main.qml"));
     view.show();
 
-    return app.exec();
+    const int ret = app.exec();
+
+    const DataModel::Model_V0 outModel = database.toModel_V0();
+    if (outModel != model) {
+        saveModel(outModel, DEFAULT_PATH);
+        saveModel(outModel, getDateString(QDateTime::currentDateTime()));
+    }
+
+    return ret;
 }

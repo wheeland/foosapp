@@ -201,6 +201,8 @@ public:
     Player *training() const { return m_training; }
     Player *myself() const { return m_myself; }
 
+    Player *addNewPlayer();
+
 private:
     QVector<Player*> m_players;
     Player *m_myself;

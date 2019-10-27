@@ -48,23 +48,29 @@ int qHash(const Player &player)
     return qHash(player.firstName) ^ qHash(player.lastName);
 }
 
-QString modelToString(const Model_V0 &model)
+QByteArray Model_V0::toString() const
 {
     QByteArray data;
     {
         QDataStream stream(&data, QIODevice::WriteOnly);
-        stream << model;
+        stream << *this;
     }
-    return QString(data.toBase64());
+    return data.toBase64();
 }
 
-Model_V0 stringToModel(const QString &string)
+bool Model_V0::fromString(const QByteArray &string)
 {
-    const QByteArray data = QByteArray::fromBase64(string.toLocal8Bit());
+    const QByteArray data = QByteArray::fromBase64(string);
     QDataStream stream(data);
-    Model_V0 out;
-    stream >> out;
-    return out;
+    stream >> *this;
+    return (stream.status() == QDataStream::Ok);
+}
+
+bool Model_V0::operator==(const Model_V0 &other) const
+{
+    return (players == other.players)
+            && (myself == other.myself)
+            && (training == other.training);
 }
 
 QString randWord()
