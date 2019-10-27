@@ -22,6 +22,7 @@ androiddeployqt \
     --android-platform android-23 \
 #    --release
 
-cp build/outputs/apk/*/build-android-release-unsigned.apk foosapp.apk
+cp build/outputs/apk/*/*.apk foosapp.apk
 
+$ANDROID_SDK_ROOT/platform-tools/adb uninstall de.wheeland.foos
 $ANDROID_SDK_ROOT/platform-tools/adb install foosapp.apk

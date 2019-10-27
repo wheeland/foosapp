@@ -29,10 +29,6 @@ Rectangle {
         }
     }
 
-    Text {
-        text: _controller.currentPage
-    }
-
     //
     // Content item with different sub-pages
     //
@@ -71,7 +67,8 @@ Rectangle {
             PlayerNamePopup {
                 id: playerNamePopup
                 visible: false
-                anchors.centerIn: parent
+                anchors.horizontalCenter: parent.horizontalCenter
+                y: 20 * _scale
                 width: 200 * _scale
 
                 Connections {
@@ -100,7 +97,7 @@ Rectangle {
             CategorySelector {
                 id: categorySelector
                 anchors.horizontalCenter: parent.horizontalCenter
-                y: 50 * _scale
+                y: 20 * _scale
                 width: 200 * _scale
                 height: 200 * _scale
 

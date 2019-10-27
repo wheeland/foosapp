@@ -47,7 +47,6 @@ Rectangle {
                 font.pixelSize: 11 * _scale
                 anchors.fill: parent
                 anchors.margins: 5 * _scale
-                focus: true
                 onAccepted: input2.focus = true
             }
         }
