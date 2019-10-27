@@ -50,7 +50,6 @@ Rectangle {
         LameMenuButton {
             text: d.editing ? "Category" : "Add"
             center: 120 * _scale
-            anchors.verticalCenter: parent.verticalCenter
             onClicked: {
                 if (!d.editing)
                     d.editNote = player.newNote();
@@ -62,7 +61,6 @@ Rectangle {
             visible: d.editing
             text: "Save"
             center: 220 * _scale
-            anchors.verticalCenter: parent.verticalCenter
             onClicked: endEditing(true)
         }
     }
