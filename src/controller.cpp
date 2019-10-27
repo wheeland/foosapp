@@ -134,7 +134,7 @@ QString Category::primaryName(Category::Primary primary)
 QString Category::techniqueName(Category::Technique technique)
 {
     const QStringList techniques {
-        "None", "Pin-Shot", "Jet", "Pullshot", "Back-Pin", "Tic-Tac"
+        "None", "Pin-Shot", "Jet", "Pull", "Push", "Back-Pin", "Tic-Tac"
     };
     return techniques.value((int) technique);
 }
@@ -142,7 +142,7 @@ QString Category::techniqueName(Category::Technique technique)
 QString Category::subTechniqueName(Category::SubTechnique subTechnique)
 {
     const QStringList subtechniques {
-        "None", "Left", "Half-Left", "Middle", "Half-Right", "Right"
+        "None", "Left", "Half-Left", "Middle", "Half-Right", "Right", "Wandering"
     };
     return subtechniques.value((int) subTechnique);
 }
