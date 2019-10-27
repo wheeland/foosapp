@@ -69,6 +69,8 @@ Rectangle {
 
         contentHeight: content.height
         contentWidth: content.width
+        flickableDirection: Flickable.VerticalFlick
+        interactive: (contentHeight > height)
 
         Column {
             id: content
