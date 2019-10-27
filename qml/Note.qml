@@ -56,7 +56,7 @@ Rectangle {
             anchors.right: parent.right
             anchors.topMargin: root.padding * _scale
             height: (root.expanded || focus) ? implicitHeight
-                                             : 2.5 * font.pixelSize
+                                             : Math.min(2.5 * font.pixelSize, implicitHeight)
             color: _style.colorText
             font.pixelSize: 11 * _scale
             wrapMode: TextInput.Wrap
