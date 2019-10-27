@@ -26,7 +26,7 @@ void Controller::goToPlayersList()
     m_currentPage = PlayersList;
     m_viewedPlayer = nullptr;
     m_editedNote = nullptr;
-    m_menuModel->setButtons({{"Back", 50}, {"Add", 120}});
+    m_menuModel->setButtons({{"Back", 50}, {"Add", 200}});
     emit currentPageChanged();
 }
 
@@ -35,7 +35,7 @@ void Controller::goToNotesList(Player *player)
     m_currentPage = NotesList;
     m_viewedPlayer = player;
     m_editedNote = nullptr;
-    m_menuModel->setButtons({{"Back", 50}, {"Add", 120}});
+    m_menuModel->setButtons({{"Back", 50}, {"Name", 120}, {"Add", 200}});
     emit currentPageChanged();
 }
 
@@ -68,6 +68,8 @@ void Controller::menuClicked(int index)
         if (index == 0)
             goToPlayersList();
         else if (index == 1) {
+            emit showEditPlayerName();
+        } else if (index == 2) {
             goToNoteEdit(m_viewedPlayer->newNote());
             emit showCategorySelector(m_editedNote->category());
         }

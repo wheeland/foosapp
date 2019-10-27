@@ -124,7 +124,7 @@ class Player : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(QString firstName READ firstName WRITE setFirstName NOTIFY firstNameChanged)
-    Q_PROPERTY(QString secondName READ secondName WRITE setSecondName NOTIFY secondNameChanged)
+    Q_PROPERTY(QString lastName READ lastName WRITE setLastName NOTIFY lastNameChanged)
     Q_PROPERTY(QDateTime lastUpdate READ lastUpdate NOTIFY lastUpdateChanged)
 
     enum Role {
@@ -140,7 +140,7 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     QString firstName() const;
-    QString secondName() const;
+    QString lastName() const;
     QDateTime lastUpdate() const;
 
     void setLastUpdate(const QDateTime &time);
@@ -152,17 +152,17 @@ public:
 
 public slots:
     void setFirstName(QString firstName);
-    void setSecondName(QString secondName);
+    void setLastName(QString lastName);
 
 signals:
     void firstNameChanged(QString firstName);
-    void secondNameChanged(QString secondName);
+    void lastNameChanged(QString lastName);
     void lastUpdateChanged(QDateTime lastUpdate);
     void categoriesChanged();
 
 private:
     QString m_firstName;
-    QString m_secondName;
+    QString m_lastName;
     QVector<Note*> m_notes;
     QDateTime m_lastUpdate;
     friend class NotesSortModel;

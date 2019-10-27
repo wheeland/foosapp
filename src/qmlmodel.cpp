@@ -244,9 +244,9 @@ QString Player::firstName() const
     return m_firstName;
 }
 
-QString Player::secondName() const
+QString Player::lastName() const
 {
-    return m_secondName;
+    return m_lastName;
 }
 
 void Player::setFirstName(QString firstName)
@@ -258,13 +258,13 @@ void Player::setFirstName(QString firstName)
     emit firstNameChanged(m_firstName);
 }
 
-void Player::setSecondName(QString secondName)
+void Player::setLastName(QString lastName)
 {
-    if (m_secondName == secondName)
+    if (m_lastName == lastName)
         return;
 
-    m_secondName = secondName;
-    emit secondNameChanged(m_secondName);
+    m_lastName = lastName;
+    emit lastNameChanged(m_lastName);
 }
 
 QDateTime Player::lastUpdate() const
@@ -374,7 +374,7 @@ Database::Database(const DataModel::Model_V0 &model_v0, QObject *parent)
     for (auto it = model_v0.players.begin(); it != model_v0.players.end(); ++it) {
         Player *player = addPlayer(it.value());
         player->setFirstName(it.key().firstName);
-        player->setSecondName(it.key().lastName);
+        player->setLastName(it.key().lastName);
         player->setLastUpdate(it.key().lastUpdate);
         m_players << player;
     }
@@ -425,7 +425,7 @@ DataModel::Model_V0 Database::toModel_V0() const
     for (Player *player : m_players) {
         const DataModel::Player p {
             player->firstName(),
-            player->secondName(),
+            player->lastName(),
             player->lastUpdate()
         };
         ret.players[p] = addNotes(player);

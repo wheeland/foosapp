@@ -65,7 +65,19 @@ Rectangle {
             anchors.margins: 10
             visible: (_controller.currentPage === Foos.Controller.NotesList)
             player: _controller.viewedPlayer
-            title: player ? (player.firstName + " " + player.secondName) : ""
+            title: player ? (player.firstName + " " + player.lastName) : ""
+
+            PlayerNamePopup {
+                id: playerNamePopup
+                visible: false
+                anchors.centerIn: parent
+                width: 200 * _scale
+
+                Connections {
+                    target: _controller
+                    onShowEditPlayerName: playerNamePopup.startEdit()
+                }
+            }
         }
 
         //
@@ -80,20 +92,20 @@ Rectangle {
             note: _controller.editedNote
             expanded: true
             animating: false
-        }
 
-        //
-        // Select category for new/existing notes
-        //
-        CategorySelector {
-            id: categorySelector
-            anchors.centerIn: parent
-            width: 200 * _scale
-            height: 200 * _scale
+            //
+            // Select category for new/existing notes
+            //
+            CategorySelector {
+                id: categorySelector
+                anchors.centerIn: parent
+                width: 200 * _scale
+                height: 200 * _scale
 
-            Connections {
-                target: _controller
-                onShowCategorySelector: categorySelector.show(category)
+                Connections {
+                    target: _controller
+                    onShowCategorySelector: categorySelector.show(category)
+                }
             }
         }
     }

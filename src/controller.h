@@ -44,6 +44,7 @@ public:
 signals:
     void currentPageChanged();
     void showCategorySelector(Category *category);
+    void showEditPlayerName();
 
 private:
     Database *m_database;

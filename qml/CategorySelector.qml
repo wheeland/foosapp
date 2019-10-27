@@ -31,7 +31,6 @@ Rectangle {
                 options = []
                 stage = 3;
                 category = null;
-                root.accepted();
             }
 
             optionCount = d.options.length;
@@ -39,9 +38,6 @@ Rectangle {
                 next(0);
         }
     }
-
-    signal accepted()
-    signal cancelled()
 
     function show(cat) {
         if (cat !== null) {
