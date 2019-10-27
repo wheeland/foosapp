@@ -30,10 +30,11 @@ void Controller::goToPlayersList()
     emit currentPageChanged();
 }
 
-void Controller::goToNotesList(Player *player)
+void Controller::goToNotesList(Player *player, bool playerIsNew)
 {
     m_currentPage = NotesList;
     m_viewedPlayer = player;
+    m_viewedPlayerIsNew = playerIsNew;
     m_editedNote = nullptr;
     m_menuModel->setButtons({{"Back", 50}, {"Name", 120}, {"Add", 200}});
     emit currentPageChanged();
@@ -61,7 +62,7 @@ void Controller::menuClicked(int index)
         if (index == 0)
             goToStartPage();
         else if (index == 1) {
-            goToNotesList(m_database->addNewPlayer());
+            goToNotesList(m_database->addNewPlayer(), true);
             emit showEditPlayerName();
         }
         break;
@@ -101,5 +102,18 @@ void Controller::menuClicked(int index)
         }
         break;
     }
+    }
+}
+
+void Controller::playerNameEntered(bool accept)
+{
+    // only care about this, if we are adding a new player right now
+    if (!m_currentPage == NotesList || !m_viewedPlayerIsNew)
+        return;
+
+    const bool nameEmpty = m_viewedPlayer->firstName().isEmpty() && m_viewedPlayer->lastName().isEmpty();
+    if (nameEmpty || !accept) {
+        m_database->removePlayer(m_viewedPlayer);
+        goToPlayersList();
     }
 }

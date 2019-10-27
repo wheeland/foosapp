@@ -36,9 +36,11 @@ public:
     Page currentPage() const{ return m_currentPage; }
 
     Q_INVOKABLE void menuClicked(int index);
+    Q_INVOKABLE void playerNameEntered(bool accept);
+
     Q_INVOKABLE void goToStartPage();
     Q_INVOKABLE void goToPlayersList();
-    Q_INVOKABLE void goToNotesList(Player *player);
+    Q_INVOKABLE void goToNotesList(Player *player, bool playerIsNew = false);
     Q_INVOKABLE void goToNoteEdit(Note *note);
 
 signals:
@@ -51,9 +53,11 @@ private:
     QScopedPointer<MenuModel> m_menuModel;
 
     Page m_currentPage = StartPage;
+
     Player *m_viewedPlayer = nullptr;
+    bool m_viewedPlayerIsNew = false;
 
     Note *m_editedNote = nullptr;
     QString m_editedNoteOriginalText;
-    int m_editedNoteOriginalCategory;
+    int m_editedNoteOriginalCategory = 0;
 };

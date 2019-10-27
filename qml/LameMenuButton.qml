@@ -14,9 +14,10 @@ Rectangle {
     border.width: _scale
 
     property real center
+    property real padding: 10
     x: center - width / 2
-    width: text.width + 10 * _scale
-    height: text.height + 8 * _scale
+    width: text.width + padding * _scale
+    height: text.height + padding * _scale
 
     anchors.verticalCenter: parent.verticalCenter
 

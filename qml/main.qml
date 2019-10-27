@@ -24,6 +24,7 @@ Rectangle {
                 text: model.text
                 center: model.position * _scale
                 onClicked: _controller.menuClicked(index)
+                padding: 12
             }
         }
     }
@@ -98,7 +99,8 @@ Rectangle {
             //
             CategorySelector {
                 id: categorySelector
-                anchors.centerIn: parent
+                anchors.horizontalCenter: parent.horizontalCenter
+                y: 50 * _scale
                 width: 200 * _scale
                 height: 200 * _scale
 

@@ -9,6 +9,7 @@ Rectangle {
     property color clickColor: _style.colorClick
     property color borderColor: _style.colorBorder
     property color textColor: _style.colorText
+    property real padding: 10
 
     signal clicked()
     signal pressAndHold()
@@ -18,8 +19,8 @@ Rectangle {
     border.color: borderColor
     border.width: _scale
 
-    width: text.width + 10 * _scale
-    height: text.height + 8 * _scale
+    width: text.width + root.padding * _scale
+    height: text.height + root.padding * _scale
 
     Text {
         id: text

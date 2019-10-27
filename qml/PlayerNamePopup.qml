@@ -84,14 +84,20 @@ Rectangle {
             spacing: 50 * _scale
             LameButton {
                 text: "Cancel"
-                onClicked: root.visible = false
+                padding: 12
+                onClicked: {
+                    root.visible = false;
+                    _controller.playerNameEntered(false);
+                }
             }
             LameButton {
                 text: "Accept"
+                padding: 12
                 onClicked: {
                     _controller.viewedPlayer.firstName = input1.text;
                     _controller.viewedPlayer.lastName = input2.text;
                     root.visible = false;
+                    _controller.playerNameEntered(true);
                 }
             }
         }

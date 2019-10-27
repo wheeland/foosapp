@@ -202,6 +202,7 @@ public:
     Player *myself() const { return m_myself; }
 
     Player *addNewPlayer();
+    void removePlayer(Player *player);
 
 private:
     QVector<Player*> m_players;

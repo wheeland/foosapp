@@ -443,6 +443,21 @@ Player *Database::addNewPlayer()
     return player;
 }
 
+void Database::removePlayer(Player *player)
+{
+    const int idx = m_players.indexOf(player);
+    if (idx < 0) {
+        qWarning() << "No such Player in Database";
+        return;
+    }
+
+    beginRemoveRows(QModelIndex(), idx, idx);
+    m_players.remove(idx);
+    endRemoveRows();
+
+    player->deleteLater();
+}
+
 void Note::setText(QString text)
 {
     if (m_text == text)
