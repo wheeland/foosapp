@@ -103,6 +103,10 @@ int main(int argc, char **argv)
 
     const int ret = app.exec();
 
+#ifdef Q_OS_ANDROID
+    logger.uninstall();
+#endif
+
     const DataModel::Model_V0 outModel = database.toModel_V0();
     if (outModel != model) {
         saveModel(outModel, AndroidUtil::appStorageDirPath() + DEFAULT_PATH);

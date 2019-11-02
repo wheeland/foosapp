@@ -13,6 +13,11 @@ void Logger::install()
     qInstallMessageHandler(&messageHandler);
 }
 
+void Logger::uninstall()
+{
+    qInstallMessageHandler(0);
+}
+
 int Logger::lineCount() const
 {
     return m_lineCount;
@@ -33,6 +38,8 @@ void Logger::add(const QString &line)
 {
     beginResetModel();
     m_lines << line;
+    while (m_lines.size() > m_lineCount)
+        m_lines.removeFirst();
     endResetModel();
 }
 

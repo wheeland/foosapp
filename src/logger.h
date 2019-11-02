@@ -21,6 +21,7 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     void install();
+    void uninstall();
 
     void add(const QString &line);
 
