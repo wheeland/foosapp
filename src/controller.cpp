@@ -108,7 +108,7 @@ void Controller::menuClicked(int index)
 void Controller::playerNameEntered(bool accept)
 {
     // only care about this, if we are adding a new player right now
-    if (!m_currentPage == NotesList || !m_viewedPlayerIsNew)
+    if (m_currentPage != NotesList || !m_viewedPlayerIsNew)
         return;
 
     const bool nameEmpty = m_viewedPlayer->firstName().isEmpty() && m_viewedPlayer->lastName().isEmpty();
