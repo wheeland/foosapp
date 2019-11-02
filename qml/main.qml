@@ -32,7 +32,7 @@ Rectangle {
             visible: (_controller.currentPage === Foos.Controller.StartPage)
             text: "Logging"
             center: 200 * _scale
-            onClicked: logOutput.visible = !logOutput.visible
+            onClicked: logOutput.isVisible = !logOutput.isVisible
             padding: 12
         }
     }
@@ -60,6 +60,8 @@ Rectangle {
             id: logOutput
             anchors.fill: parent
             color: _style.colorArea
+            property bool isVisible: false
+            visible: (_controller.currentPage === Foos.Controller.StartPage) && isVisible
 
             Flickable {
                 anchors.fill: parent
@@ -67,7 +69,7 @@ Rectangle {
                 contentWidth: logOutputColumn.width
                 Column {
                     id: logOutputColumn
-                    width: logOutput.width
+                    width: childrenRect.width
                     height: childrenRect.height
                     Repeater {
                         model: _logger
