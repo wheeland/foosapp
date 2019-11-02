@@ -23,7 +23,8 @@ public:
     {
         StartPage,
         PlayersList,
-        NotesList,
+        PlayerView,
+        PlayerNameEdit,
         NoteEdit,
     };
     Q_ENUM(Page)
@@ -35,17 +36,19 @@ public:
     Page currentPage() const{ return m_currentPage; }
 
     Q_INVOKABLE void menuClicked(int index);
-    Q_INVOKABLE void playerNameEntered(bool accept);
+    Q_INVOKABLE void noteEdited(const QString &text);
 
-    Q_INVOKABLE void goToStartPage();
-    Q_INVOKABLE void goToPlayersList();
-    Q_INVOKABLE void goToNotesList(Player *player, bool playerIsNew = false);
+    void goToStartPage();
+    void goToPlayersList();
+    void goToPlayerNameEdit(Player *player, bool newPlayer);
+
+    Q_INVOKABLE void goToNotesList(Player *player);
     Q_INVOKABLE void goToNoteEdit(Note *note);
 
 signals:
     void currentPageChanged();
+    void endNoteEditing();
     void showCategorySelector(Category *category);
-    void showEditPlayerName();
 
 private:
     Database *m_database;
@@ -53,6 +56,7 @@ private:
 
     Page m_currentPage = StartPage;
 
+    QPair<QString, QString> m_playerNameBeforeEdit;
     Player *m_viewedPlayer = nullptr;
     bool m_viewedPlayerIsNew = false;
 

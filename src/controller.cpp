@@ -1,5 +1,7 @@
 #include "controller.h"
 
+#include <QDebug>
+
 Controller::Controller(Database *database, QObject *parent)
     : QObject(parent)
     , m_database(database)
@@ -30,13 +32,23 @@ void Controller::goToPlayersList()
     emit currentPageChanged();
 }
 
-void Controller::goToNotesList(Player *player, bool playerIsNew)
+void Controller::goToNotesList(Player *player)
 {
-    m_currentPage = NotesList;
+    m_currentPage = PlayerView;
     m_viewedPlayer = player;
-    m_viewedPlayerIsNew = playerIsNew;
     m_editedNote = nullptr;
     m_menuModel->setButtons({{"Back", 50}, {"Name", 110}, {"Add", 210}});
+    emit currentPageChanged();
+}
+
+void Controller::goToPlayerNameEdit(Player *player, bool newPlayer)
+{
+    m_currentPage = PlayerNameEdit;
+    m_viewedPlayer = player;
+    m_viewedPlayerIsNew = newPlayer;
+    m_playerNameBeforeEdit = qMakePair(player->firstName(), player->lastName());
+    m_editedNote = nullptr;
+    m_menuModel->setButtons({{"Back", 50}, {"OK", 210}});
     emit currentPageChanged();
 }
 
@@ -62,19 +74,36 @@ void Controller::menuClicked(int index)
         if (index == 0)
             goToStartPage();
         else if (index == 1) {
-            goToNotesList(m_database->addNewPlayer(), true);
-            emit showEditPlayerName();
+            goToPlayerNameEdit(m_database->addNewPlayer(), true);
         }
         break;
     }
-    case NotesList: {
+    case PlayerView: {
         if (index == 0)
             goToPlayersList();
         else if (index == 1) {
-            emit showEditPlayerName();
+            goToPlayerNameEdit(m_viewedPlayer, false);
         } else if (index == 2) {
             goToNoteEdit(m_viewedPlayer->newNote());
             emit showCategorySelector(m_editedNote->category());
+        }
+        break;
+    }
+    case PlayerNameEdit: {
+        // back
+        if (index == 0) {
+            m_viewedPlayer->setFirstName(m_playerNameBeforeEdit.first);
+            m_viewedPlayer->setLastName(m_playerNameBeforeEdit.second);
+            if (m_viewedPlayerIsNew) {
+                m_database->removePlayer(m_viewedPlayer);
+                goToPlayersList();
+            } else {
+                goToNotesList(m_viewedPlayer);
+            }
+        }
+        // OK
+        else if (index == 1) {
+            goToNotesList(m_viewedPlayer);
         }
         break;
     }
@@ -100,25 +129,24 @@ void Controller::menuClicked(int index)
         }
         // save
         else if (index == 3) {
-            // remove, if empty
-            if (m_editedNote->text().isEmpty())
-                m_viewedPlayer->removeNote(m_editedNote);
-            goToNotesList(m_viewedPlayer);
+            // we will have to get control back to QML, so that it can
+            // un-set the focus from the TextEdit, so that the inputMethod stops
+            // composing and we can use the 'text' property. then we'll get called
+            // in noteEdited()
+            emit endNoteEditing();
         }
         break;
     }
     }
 }
 
-void Controller::playerNameEntered(bool accept)
+void Controller::noteEdited(const QString &text)
 {
-    // only care about this, if we are adding a new player right now
-    if (m_currentPage != NotesList || !m_viewedPlayerIsNew)
-        return;
-
-    const bool nameEmpty = m_viewedPlayer->firstName().isEmpty() && m_viewedPlayer->lastName().isEmpty();
-    if (nameEmpty || !accept) {
-        m_database->removePlayer(m_viewedPlayer);
-        goToPlayersList();
+    // we get called after the save button has been hit
+    if (m_currentPage == NoteEdit && m_editedNote) {
+        m_editedNote->setText(text);
+        if (m_editedNote->text().isEmpty())
+            m_viewedPlayer->removeNote(m_editedNote);
+        goToNotesList(m_viewedPlayer);
     }
 }

@@ -41,6 +41,7 @@ Rectangle {
                 delegate: Note {
                     width: root.width - 8 * _scale
                     note: model.note
+                    text: model.note ? model.note.text : ""
                 }
             }
         }

@@ -14,10 +14,14 @@ Rectangle {
     border.width: _scale
 
     function startEdit() {
-        visible = true;
         input1.focus = true;
         input1.text = _controller.viewedPlayer.firstName
         input2.text = _controller.viewedPlayer.lastName
+    }
+
+    function stopEdit() {
+        input1.focus = false;
+        input2.focus = false;
     }
 
     Column {
@@ -48,6 +52,7 @@ Rectangle {
                 anchors.fill: parent
                 anchors.margins: 5 * _scale
                 onAccepted: input2.focus = true
+                onTextChanged: _controller.viewedPlayer.firstName = text
             }
         }
 
@@ -73,31 +78,7 @@ Rectangle {
                 anchors.fill: parent
                 anchors.margins: 5 * _scale
                 onAccepted: input2.focus = false
-            }
-        }
-
-        Item { width: 1; height: 10 * _scale }
-
-        Row {
-            anchors.horizontalCenter: parent.horizontalCenter
-            spacing: 50 * _scale
-            LameButton {
-                text: "Cancel"
-                padding: 12
-                onClicked: {
-                    root.visible = false;
-                    _controller.playerNameEntered(false);
-                }
-            }
-            LameButton {
-                text: "Accept"
-                padding: 12
-                onClicked: {
-                    _controller.viewedPlayer.firstName = input1.text;
-                    _controller.viewedPlayer.lastName = input2.text;
-                    root.visible = false;
-                    _controller.playerNameEntered(true);
-                }
+                onTextChanged: _controller.viewedPlayer.lastName = text
             }
         }
     }

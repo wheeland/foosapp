@@ -9,7 +9,9 @@ Rectangle {
     property bool expanded: false
     property real padding: 8
     property bool animating: true
+    property bool editing: false
     property alias textFocus: textEdit.focus
+    property alias text: textEdit.text
 
     SingleshotTimer {
         id: expandTimer
@@ -41,6 +43,12 @@ Rectangle {
             }
         }
 
+        Rectangle {
+            width: 20
+            height: 20
+            color: textEdit.inputMethodComposing ? "green" : "red"
+        }
+
         Text {
             id: categoryText
             color: textEdit.focus ? _style.colorTextHighlighted : _style.colorText
@@ -60,18 +68,13 @@ Rectangle {
             color: _style.colorText
             font.pixelSize: 11 * _scale
             wrapMode: TextInput.Wrap
-            text: root.note ? root.note.text : ""
-            onTextChanged: {
-                if (root.note)
-                    root.note.text = text;
-            }
         }
     }
 
     MouseArea {
         anchors.fill: content
-        visible: !root.textFocus
+        visible: !root.editing
         onClicked: expandTimer.start()
-        onDoubleClicked: _controller.goToNoteEdit(root.note)
+        onPressAndHold: _controller.goToNoteEdit(root.note)
     }
 }

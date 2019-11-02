@@ -72,7 +72,7 @@ Rectangle {
                     width: childrenRect.width
                     height: childrenRect.height
                     Repeater {
-                        model: _logger
+                        model: logOutput.visible ? _logger : null
                         delegate: Text {
                             text: model.text
                         }
@@ -96,21 +96,26 @@ Rectangle {
         NoteList {
             anchors.fill: parent
             anchors.margins: 10
-            visible: (_controller.currentPage === Foos.Controller.NotesList)
+            visible: (_controller.currentPage === Foos.Controller.PlayerView)
             player: _controller.viewedPlayer
             title: player ? (player.firstName + " " + player.lastName) : ""
+        }
 
-            PlayerNamePopup {
-                id: playerNamePopup
-                visible: false
-                anchors.horizontalCenter: parent.horizontalCenter
-                y: 20 * _scale
-                width: 200 * _scale
+        //
+        // Player Name Entry
+        //
+        PlayerNamePopup {
+            id: playerNamePopup
+            visible: (_controller.currentPage === Foos.Controller.PlayerNameEdit)
+            anchors.horizontalCenter: parent.horizontalCenter
+            y: 20 * _scale
+            width: 200 * _scale
 
-                Connections {
-                    target: _controller
-                    onShowEditPlayerName: playerNamePopup.startEdit()
-                }
+            onVisibleChanged: {
+                if (visible)
+                    startEdit();
+                else
+                    stopEdit();
             }
         }
 
@@ -122,10 +127,26 @@ Rectangle {
             visible: (_controller.currentPage === Foos.Controller.NoteEdit)
             anchors.fill: parent
             anchors.margins: 10
-            textFocus: visible && !categorySelector.visible
+
+            property bool isEditing: true
+            textFocus: visible && isEditing && !categorySelector.visible
             note: _controller.editedNote
             expanded: true
             animating: false
+            editing: true
+
+            onVisibleChanged: {
+                isEditing = visible;
+                text = visible ? _controller.editedNote.text : "";
+            }
+
+            Connections {
+                target: _controller
+                onEndNoteEditing: {
+                    editNoteItem.isEditing = false;
+                    _controller.noteEdited(editNoteItem.text)
+                }
+            }
 
             //
             // Select category for new/existing notes
