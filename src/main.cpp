@@ -31,9 +31,15 @@ DataModel::Model_V0 loadModel(const QString &path)
     DataModel::Model_V0 ret;
 
     QFile data(path);
-    if (data.exists() && data.open(QIODevice::ReadOnly)) {
-        ret.fromString(data.readAll());
+    if (!data.exists()) {
+        qWarning() << "loadModel: file doesn't exist:" << path;
+        return ret;
     }
+    if (!data.open(QIODevice::ReadOnly)) {
+        qWarning() << "loadModel: can't open for reading:" << path;
+        return ret;
+    }
+    ret.fromString(data.readAll());
 
     return ret;
 }
@@ -41,20 +47,32 @@ DataModel::Model_V0 loadModel(const QString &path)
 void saveModel(const DataModel::Model_V0 &model, const QString &path)
 {
     QFile data(path);
-    if (data.open(QIODevice::WriteOnly)) {
-        data.write(model.toString());
+    if (!data.open(QIODevice::WriteOnly)) {
+        qWarning() << "saveModel: can't open for writing:" << path;
+        return;
     }
+    data.write(model.toString());
 }
 
 int main(int argc, char **argv)
 {
     QGuiApplication app(argc, argv);
 
-    DataModel::Model_V0 model = loadModel(AndroidUtil::appStorageDirPath() + DEFAULT_PATH);
+    Logger logger;
+#ifdef Q_OS_ANDROID
+    logger.install();
+#endif
+
+    // load data from storage
+    const bool created = AndroidUtil::createAppStorageDir();
+    qWarning() << "AndroidUtil::createAppStorageDir():" << created;
+    qWarning() << "dir =" << AndroidUtil::appStorageDirPath();
+    const QString dataFileName = AndroidUtil::appStorageDirPath() + DEFAULT_PATH;
+    qWarning() << "file =" << dataFileName;
+    qWarning() << "permissions =" << QFile::permissions(dataFileName);
+    DataModel::Model_V0 model = loadModel(dataFileName);
     Database database(model);
     Controller controller(&database);
-    Logger logger;
-    logger.install();
 
     qmlRegisterType<Category>("Foos", 1, 0, "Category");
     qmlRegisterType<Note>("Foos", 1, 0, "Note");
