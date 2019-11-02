@@ -27,6 +27,13 @@ Rectangle {
                 padding: 12
             }
         }
+
+        LameMenuButton {
+            text: "Logging"
+            center: 200 * _scale
+            onClicked: logOutput.visible = !logOutput.visible
+            padding: 12
+        }
     }
 
     //
@@ -104,6 +111,32 @@ Rectangle {
                 Connections {
                     target: _controller
                     onShowCategorySelector: categorySelector.show(category)
+                }
+            }
+        }
+
+        //
+        // show debug messages
+        //
+        Rectangle {
+            id: logOutput
+            anchors.fill: parent
+            color: _style.colorArea
+
+            Flickable {
+                anchors.fill: parent
+                contentHeight: logOutputColumn.height
+                contentWidth: logOutputColumn.width
+                Column {
+                    id: logOutputColumn
+                    width: logOutput.width
+                    height: childrenRect.height
+                    Repeater {
+                        model: _logger
+                        delegate: Text {
+                            text: model.text
+                        }
+                    }
                 }
             }
         }

@@ -12,6 +12,7 @@ SOURCES += \
     src/menumodel.cpp \
     src/controller.cpp \
     src/datamodel.cpp \
+    src/logger.cpp \
 
 HEADERS += \
     src/androidutil.h \
@@ -20,6 +21,7 @@ HEADERS += \
     src/menumodel.h \
     src/controller.h \
     src/datamodel.h \
+    src/logger.h \
 
 RESOURCES += \
     qml.qrc

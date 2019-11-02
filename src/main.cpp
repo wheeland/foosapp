@@ -10,6 +10,7 @@
 
 #include "qmlmodel.h"
 #include "controller.h"
+#include "logger.h"
 
 static QString DEFAULT_PATH = QString("data.bin");
 
@@ -51,6 +52,8 @@ int main(int argc, char **argv)
     DataModel::Model_V0 model = loadModel(DEFAULT_PATH);
     Database database(model);
     Controller controller(&database);
+    Logger logger;
+    logger.install();
 
     qmlRegisterType<Category>("Foos", 1, 0, "Category");
     qmlRegisterType<Note>("Foos", 1, 0, "Note");
@@ -69,6 +72,7 @@ int main(int argc, char **argv)
     view.resize(screenSize);
     view.setResizeMode(QQuickView::SizeRootObjectToView);
     view.rootContext()->setContextProperty("_controller", &controller);
+    view.rootContext()->setContextProperty("_logger", &logger);
     view.rootContext()->setContextProperty("_scale", screenSize.width() / 240.0f);
 
     QQmlComponent styleComponent(view.engine(), "qrc:/qml/Style.qml");
