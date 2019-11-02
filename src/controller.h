@@ -25,7 +25,6 @@ public:
         PlayersList,
         NotesList,
         NoteEdit,
-        CategorySelector,
     };
     Q_ENUM(Page)
 
