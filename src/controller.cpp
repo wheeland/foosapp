@@ -36,7 +36,7 @@ void Controller::goToNotesList(Player *player, bool playerIsNew)
     m_viewedPlayer = player;
     m_viewedPlayerIsNew = playerIsNew;
     m_editedNote = nullptr;
-    m_menuModel->setButtons({{"Back", 50}, {"Name", 120}, {"Add", 200}});
+    m_menuModel->setButtons({{"Back", 50}, {"Name", 110}, {"Add", 210}});
     emit currentPageChanged();
 }
 
@@ -46,7 +46,7 @@ void Controller::goToNoteEdit(Note *note)
     m_editedNote = note;
     m_editedNoteOriginalText = note->text();
     m_editedNoteOriginalCategory = note->category()->toInt();
-    m_menuModel->setButtons({{"Cancel", 50}, {"Category", 120}, {"Save", 200}});
+    m_menuModel->setButtons({{"Back", 25}, {"Cat.", 90}, {"Del.", 150}, {"Save", 210}});
     emit currentPageChanged();
 }
 
