@@ -93,8 +93,13 @@ void Controller::menuClicked(int index)
         else if (index == 1) {
             emit showCategorySelector(m_editedNote->category());
         }
-        // save
+        // delete
         else if (index == 2) {
+            m_viewedPlayer->removeNote(m_editedNote);
+            goToNotesList(m_viewedPlayer);
+        }
+        // save
+        else if (index == 3) {
             // remove, if empty
             if (m_editedNote->text().isEmpty())
                 m_viewedPlayer->removeNote(m_editedNote);
