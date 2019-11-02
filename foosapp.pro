@@ -6,6 +6,7 @@ QT += qml quick svg
 
 SOURCES += \
     src/main.cpp \
+    src/androidutil.cpp \
     src/app.cpp \
     src/qmlmodel.cpp \
     src/menumodel.cpp \
@@ -13,6 +14,7 @@ SOURCES += \
     src/datamodel.cpp \
 
 HEADERS += \
+    src/androidutil.h \
     src/app.h \
     src/qmlmodel.h \
     src/menumodel.h \
