@@ -31,6 +31,8 @@ struct Model_V0
 
     bool operator==(const Model_V0 &other) const;
     bool operator!=(const Model_V0 &other) const { return !(*this == other); }
+
+    static constexpr quint32 VERSION_TAG = 0;
 };
 
 Model_V0 dummy();

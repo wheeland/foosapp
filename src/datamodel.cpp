@@ -1,6 +1,7 @@
 #include "datamodel.h"
 
 #include <QDataStream>
+#include <QDebug>
 
 QDataStream &operator<<(QDataStream &stream, const DataModel::Player &player)
 {
@@ -53,6 +54,7 @@ QByteArray Model_V0::toString() const
     QByteArray data;
     {
         QDataStream stream(&data, QIODevice::WriteOnly);
+        stream << (quint32) VERSION_TAG;
         stream << *this;
     }
     return data.toBase64();
@@ -62,8 +64,15 @@ bool Model_V0::fromString(const QByteArray &string)
 {
     const QByteArray data = QByteArray::fromBase64(string);
     QDataStream stream(data);
+    quint32 versionTag;
+    stream >> versionTag;
     stream >> *this;
-    return (stream.status() == QDataStream::Ok);
+    if (versionTag == VERSION_TAG)
+        return (stream.status() == QDataStream::Ok);
+    else {
+        qWarning() << "Wrong version tag! Found" << versionTag << ", expected" << VERSION_TAG;
+        return false;
+    }
 }
 
 bool Model_V0::operator==(const Model_V0 &other) const
