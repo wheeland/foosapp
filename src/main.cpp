@@ -8,6 +8,7 @@
 #include <QFile>
 #include <QDir>
 
+#include "androidutil.h"
 #include "qmlmodel.h"
 #include "controller.h"
 #include "logger.h"
@@ -49,7 +50,7 @@ int main(int argc, char **argv)
 {
     QGuiApplication app(argc, argv);
 
-    DataModel::Model_V0 model = loadModel(DEFAULT_PATH);
+    DataModel::Model_V0 model = loadModel(AndroidUtil::appStorageDirPath() + DEFAULT_PATH);
     Database database(model);
     Controller controller(&database);
     Logger logger;
@@ -86,8 +87,8 @@ int main(int argc, char **argv)
 
     const DataModel::Model_V0 outModel = database.toModel_V0();
     if (outModel != model) {
-        saveModel(outModel, DEFAULT_PATH);
-        saveModel(outModel, getDateString(QDateTime::currentDateTime()));
+        saveModel(outModel, AndroidUtil::appStorageDirPath() + DEFAULT_PATH);
+        saveModel(outModel, AndroidUtil::appStorageDirPath() + getDateString(QDateTime::currentDateTime()) + ".bin");
     }
 
     return ret;
