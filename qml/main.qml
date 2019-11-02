@@ -29,6 +29,7 @@ Rectangle {
         }
 
         LameMenuButton {
+            visible: (_controller.currentPage === Foos.Controller.StartPage)
             text: "Logging"
             center: 200 * _scale
             onClicked: logOutput.visible = !logOutput.visible
