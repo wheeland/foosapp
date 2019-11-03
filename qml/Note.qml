@@ -69,6 +69,7 @@ Rectangle {
         anchors.fill: content
         visible: !root.editing
         onClicked: expandTimer.start()
+        pressAndHoldInterval: 250
         onPressAndHold: _controller.goToNoteEdit(root.note)
     }
 }
