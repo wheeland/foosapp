@@ -8,7 +8,9 @@ import Foos 1.0 as Foos
 ListView {
     id: root
 
-    model: _controller.database
+    model: Foos.PlayersSortModel {
+        sourceModel: _controller.database
+    }
     spacing: 2 * _scale
 
     delegate: Rectangle {
@@ -27,7 +29,7 @@ ListView {
             color: _style.colorText
             anchors.verticalCenter: parent.verticalCenter
             x: 4 * _scale
-            text: model.player.firstName
+            text: model.player.firstName + " " + model.player.lastName
             font.pixelSize: 12 * _scale
             font.bold: true
         }

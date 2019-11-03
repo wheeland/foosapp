@@ -112,6 +112,7 @@ int main(int argc, char **argv)
     qmlRegisterType<Note>("Foos", 1, 0, "Note");
     qmlRegisterType<Player>("Foos", 1, 0, "Player");
     qmlRegisterType<NotesSortModel>("Foos", 1, 0, "NotesSortModel");
+    qmlRegisterType<PlayersSortModel>("Foos", 1, 0, "PlayersSortModel");
     qmlRegisterUncreatableType<Database>("Foos", 1, 0, "Database", "nope.");
     qmlRegisterUncreatableType<Controller>("Foos", 1, 0, "Controller", "nope.");
 

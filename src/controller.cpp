@@ -140,6 +140,7 @@ void Controller::menuClicked(int index)
         // OK
         else if (index == 1) {
             goToPlayerView(m_viewedPlayer);
+            emit m_database->playerNamesChanged();
             emit saveData();
         }
         break;

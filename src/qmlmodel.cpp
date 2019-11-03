@@ -356,27 +356,25 @@ void NotesSortModel::doSort()
 Database::Database(const DataModel::Model_V0 &model_v0, QObject *parent)
     : QAbstractListModel(parent)
 {
-    const auto addPlayer = [&](const DataModel::Notes &notes) -> Player* {
-        Player *ret = new Player(this);
-
+    const auto initPlayer = [&](Player *player, const DataModel::Notes &notes) {
         for (const QPair<int, QString> &nt : notes) {
-            Note *note = ret->newNote();
+            Note *note = player->newNote();
             note->category()->fromInt(nt.first);
             note->setText(nt.second);
         }
-
-        return ret;
     };
 
-    m_myself = addPlayer(model_v0.myself);
-    m_training = addPlayer(model_v0.training);
+    m_myself = new Player();
+    initPlayer(m_myself, model_v0.myself);
+    m_training = new Player();
+    initPlayer(m_training, model_v0.training);
 
     for (auto it = model_v0.players.begin(); it != model_v0.players.end(); ++it) {
-        Player *player = addPlayer(it.value());
+        Player *player = addNewPlayer();
+        initPlayer(player, it.value());
         player->setFirstName(it.key().firstName);
         player->setLastName(it.key().lastName);
         player->setLastUpdate(it.key().lastUpdate);
-        m_players << player;
     }
 }
 
@@ -465,4 +463,30 @@ void Note::setText(QString text)
 
     m_text = text;
     emit textChanged(m_text);
+}
+
+PlayersSortModel::PlayersSortModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
+{
+    connect(this, &QSortFilterProxyModel::sourceModelChanged, this, [=]() {
+        Database *db = qobject_cast<Database*>(sourceModel());
+        if (db)
+            connect(db, &Database::playerNamesChanged, this, &PlayersSortModel::doSort);
+        doSort();
+    });
+}
+
+bool PlayersSortModel::lessThan(const QModelIndex &lhs, const QModelIndex &rhs) const
+{
+    Player *left = sourceModel()->data(lhs, Database::PlayerRole).value<Player*>();
+    Player *right = sourceModel()->data(rhs, Database::PlayerRole).value<Player*>();
+    if (!left || !right)
+        return false;
+    return (left->firstName() + left->lastName()) <= (right->firstName() + right->lastName());
+}
+
+void PlayersSortModel::doSort()
+{
+    invalidate();
+    sort(0);
 }

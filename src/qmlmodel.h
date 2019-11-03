@@ -204,8 +204,24 @@ public:
     Player *addNewPlayer();
     void removePlayer(Player *player);
 
+signals:
+    void playerNamesChanged();
+
 private:
     QVector<Player*> m_players;
     Player *m_myself;
     Player *m_training;
+    friend class PlayersSortModel;
+};
+
+class PlayersSortModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+
+public:
+    PlayersSortModel(QObject *parent = nullptr);
+    bool lessThan(const QModelIndex &lhs, const QModelIndex &rhs) const override;
+
+public slots:
+    void doSort();
 };
