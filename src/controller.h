@@ -42,13 +42,14 @@ public:
     void goToPlayersList();
     void goToPlayerNameEdit(Player *player, bool newPlayer);
 
-    Q_INVOKABLE void goToNotesList(Player *player);
+    Q_INVOKABLE void goToPlayerView(Player *player);
     Q_INVOKABLE void goToNoteEdit(Note *note);
 
 signals:
     void currentPageChanged();
     void endNoteEditing();
     void showCategorySelector(Category *category);
+    void saveData();
 
 private:
     Database *m_database;

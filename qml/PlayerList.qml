@@ -35,7 +35,7 @@ ListView {
         MouseArea {
             id: playerMouseArea
             anchors.fill: parent
-            onClicked: _controller.goToNotesList(model.player)
+            onClicked: _controller.goToPlayerView(model.player)
         }
     }
 }

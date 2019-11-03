@@ -13,18 +13,7 @@
 #include "controller.h"
 #include "logger.h"
 
-static QString DEFAULT_PATH = QString("data.bin");
-
-static QString getDateString(const QDateTime &dt)
-{
-    return QString::asprintf("%d_%d_%d_%d_%d_%d.bin",
-                             dt.date().year(),
-                             dt.date().month(),
-                             dt.date().day(),
-                             dt.time().hour(),
-                             dt.time().minute(),
-                             dt.time().second());
-}
+static const QString DEFAULT_PATH = QString("data.bin");
 
 DataModel::Model_V0 loadModel(const QString &path)
 {
@@ -63,16 +52,31 @@ int main(int argc, char **argv)
     logger.install();
 #endif
 
+    // Prepare storage
+    const QString appStorageDirPath = AndroidUtil::appStorageDirPath();
+    if (!AndroidUtil::createAppStorageDir())
+        qWarning() << "Failed to create app storage directory";
+
     // load data from storage
-    const bool created = AndroidUtil::createAppStorageDir();
-    qWarning() << "AndroidUtil::createAppStorageDir():" << created;
-    qWarning() << "dir =" << AndroidUtil::appStorageDirPath();
-    const QString dataFileName = AndroidUtil::appStorageDirPath() + DEFAULT_PATH;
-    qWarning() << "file =" << dataFileName;
-    qWarning() << "permissions =" << QFile::permissions(dataFileName);
+    const QString dataFileName = appStorageDirPath + DEFAULT_PATH;
     DataModel::Model_V0 model = loadModel(dataFileName);
+
     Database database(model);
     Controller controller(&database);
+
+    // save data to storage, whenever something changed
+    QObject::connect(&controller, &Controller::saveData, [&]() {
+        const DataModel::Model_V0 outModel = database.toModel_V0();
+        saveModel(outModel, dataFileName);
+
+        // we want to save a backup every day
+        const QDate dt = QDate::currentDate();
+        const QString dateStr = QString::asprintf("%d_%02d_%02d", dt.year(), dt.month(), dt.day());
+        const QString backupFilePath = appStorageDirPath + dateStr + ".bin";
+        if (!QFile(backupFilePath).exists()) {
+            saveModel(outModel, backupFilePath);
+        }
+    });
 
     qmlRegisterType<Category>("Foos", 1, 0, "Category");
     qmlRegisterType<Note>("Foos", 1, 0, "Note");
@@ -106,12 +110,6 @@ int main(int argc, char **argv)
 #ifdef Q_OS_ANDROID
     logger.uninstall();
 #endif
-
-    const DataModel::Model_V0 outModel = database.toModel_V0();
-    if (outModel != model) {
-        saveModel(outModel, AndroidUtil::appStorageDirPath() + DEFAULT_PATH);
-        saveModel(outModel, AndroidUtil::appStorageDirPath() + getDateString(QDateTime::currentDateTime()) + ".bin");
-    }
 
     return ret;
 }

@@ -1,4 +1,5 @@
 #include "controller.h"
+#include "androidutil.h"
 
 #include <QDebug>
 
@@ -32,7 +33,7 @@ void Controller::goToPlayersList()
     emit currentPageChanged();
 }
 
-void Controller::goToNotesList(Player *player)
+void Controller::goToPlayerView(Player *player)
 {
     m_currentPage = PlayerView;
     m_viewedPlayer = player;
@@ -71,19 +72,24 @@ void Controller::menuClicked(int index)
         break;
     }
     case PlayersList: {
-        if (index == 0)
+        if (index == 0) {
             goToStartPage();
-        else if (index == 1) {
+        } else if (index == 1) {
             goToPlayerNameEdit(m_database->addNewPlayer(), true);
         }
         break;
     }
     case PlayerView: {
-        if (index == 0)
+        // Back
+        if (index == 0) {
             goToPlayersList();
+        }
+        // Name
         else if (index == 1) {
             goToPlayerNameEdit(m_viewedPlayer, false);
-        } else if (index == 2) {
+        }
+        // Add Note
+        else if (index == 2) {
             goToNoteEdit(m_viewedPlayer->newNote());
             emit showCategorySelector(m_editedNote->category());
         }
@@ -98,12 +104,13 @@ void Controller::menuClicked(int index)
                 m_database->removePlayer(m_viewedPlayer);
                 goToPlayersList();
             } else {
-                goToNotesList(m_viewedPlayer);
+                goToPlayerView(m_viewedPlayer);
             }
         }
         // OK
         else if (index == 1) {
-            goToNotesList(m_viewedPlayer);
+            goToPlayerView(m_viewedPlayer);
+            emit saveData();
         }
         break;
     }
@@ -116,7 +123,7 @@ void Controller::menuClicked(int index)
             // remove, if empty
             if (m_editedNote->text().isEmpty())
                 m_viewedPlayer->removeNote(m_editedNote);
-            goToNotesList(m_viewedPlayer);
+            goToPlayerView(m_viewedPlayer);
         }
         // category selectah
         else if (index == 1) {
@@ -125,7 +132,7 @@ void Controller::menuClicked(int index)
         // delete
         else if (index == 2) {
             m_viewedPlayer->removeNote(m_editedNote);
-            goToNotesList(m_viewedPlayer);
+            goToPlayerView(m_viewedPlayer);
         }
         // save
         else if (index == 3) {
@@ -147,6 +154,8 @@ void Controller::noteEdited(const QString &text)
         m_editedNote->setText(text);
         if (m_editedNote->text().isEmpty())
             m_viewedPlayer->removeNote(m_editedNote);
-        goToNotesList(m_viewedPlayer);
+        goToPlayerView(m_viewedPlayer);
+
+        emit saveData();
     }
 }

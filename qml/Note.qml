@@ -43,12 +43,6 @@ Rectangle {
             }
         }
 
-        Rectangle {
-            width: 20
-            height: 20
-            color: textEdit.inputMethodComposing ? "green" : "red"
-        }
-
         Text {
             id: categoryText
             color: textEdit.focus ? _style.colorTextHighlighted : _style.colorText
