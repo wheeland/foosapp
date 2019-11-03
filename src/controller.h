@@ -45,6 +45,8 @@ public:
     Q_INVOKABLE void goToPlayerView(Player *player);
     Q_INVOKABLE void goToNoteEdit(Note *note);
 
+    bool onBackButton();
+
 signals:
     void currentPageChanged();
     void endNoteEditing();
@@ -52,6 +54,8 @@ signals:
     void saveData();
 
 private:
+    void cancelPlayerEditName();
+
     Database *m_database;
     QScopedPointer<MenuModel> m_menuModel;
 

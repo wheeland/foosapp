@@ -12,6 +12,28 @@
 #include "qmlmodel.h"
 #include "controller.h"
 #include "logger.h"
+#include "app.h"
+
+class CloseFilter : public QObject
+{
+    Q_OBJECT
+
+public:
+    using QObject::QObject;
+    ~CloseFilter() override = default;
+
+    bool eventFilter(QObject *watched, QEvent *event) override
+    {
+        if (event->type() == QEvent::Close) {
+            emit backButtonPressed();
+            return true;
+        }
+        return false;
+    }
+
+signals:
+    void backButtonPressed();
+};
 
 static const QString DEFAULT_PATH = QString("data.bin");
 
@@ -64,6 +86,14 @@ int main(int argc, char **argv)
     Database database(model);
     Controller controller(&database);
 
+    // React to close signal
+    CloseFilter filter;
+    app.installEventFilter(&filter);
+    QObject::connect(&filter, &CloseFilter::backButtonPressed, [&]() {
+        if (!controller.onBackButton())
+            app.exit();
+    });
+
     // save data to storage, whenever something changed
     QObject::connect(&controller, &Controller::saveData, [&]() {
         const DataModel::Model_V0 outModel = database.toModel_V0();
@@ -113,3 +143,5 @@ int main(int argc, char **argv)
 
     return ret;
 }
+
+#include "main.moc"

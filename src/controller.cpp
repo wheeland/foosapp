@@ -63,6 +63,43 @@ void Controller::goToNoteEdit(Note *note)
     emit currentPageChanged();
 }
 
+bool Controller::onBackButton()
+{
+    switch (m_currentPage) {
+    case StartPage: {
+        return false;
+    }
+    case PlayersList: {
+        goToStartPage();
+        return true;
+    }
+    case PlayerView: {
+        goToPlayersList();
+        return true;
+    }
+    case PlayerNameEdit: {
+        cancelPlayerEditName();
+        return true;
+    }
+    case NoteEdit: {
+        emit endNoteEditing();
+        return true;
+    }
+    }
+}
+
+void Controller::cancelPlayerEditName()
+{
+    m_viewedPlayer->setFirstName(m_playerNameBeforeEdit.first);
+    m_viewedPlayer->setLastName(m_playerNameBeforeEdit.second);
+    if (m_viewedPlayerIsNew) {
+        m_database->removePlayer(m_viewedPlayer);
+        goToPlayersList();
+    } else {
+        goToPlayerView(m_viewedPlayer);
+    }
+}
+
 void Controller::menuClicked(int index)
 {
     switch (m_currentPage) {
@@ -98,14 +135,7 @@ void Controller::menuClicked(int index)
     case PlayerNameEdit: {
         // back
         if (index == 0) {
-            m_viewedPlayer->setFirstName(m_playerNameBeforeEdit.first);
-            m_viewedPlayer->setLastName(m_playerNameBeforeEdit.second);
-            if (m_viewedPlayerIsNew) {
-                m_database->removePlayer(m_viewedPlayer);
-                goToPlayersList();
-            } else {
-                goToPlayerView(m_viewedPlayer);
-            }
+            cancelPlayerEditName();
         }
         // OK
         else if (index == 1) {
