@@ -8,20 +8,11 @@ Controller::Controller(Database *database, QObject *parent)
     , m_database(database)
     , m_menuModel(new MenuModel(this))
 {
-    goToStartPage();
+    goToPlayersList();
 }
 
 Controller::~Controller()
 {
-}
-
-void Controller::goToStartPage()
-{
-    m_currentPage = StartPage;
-    m_viewedPlayer = nullptr;
-    m_editedNote = nullptr;
-    m_menuModel->setButtons({{"Player List", 50}});
-    emit currentPageChanged();
 }
 
 void Controller::goToPlayersList()
@@ -29,7 +20,7 @@ void Controller::goToPlayersList()
     m_currentPage = PlayersList;
     m_viewedPlayer = nullptr;
     m_editedNote = nullptr;
-    m_menuModel->setButtons({{"Back", 50}, {"Add", 200}});
+    m_menuModel->setButtons({{"Add", 210}});
     emit currentPageChanged();
 }
 
@@ -38,7 +29,7 @@ void Controller::goToPlayerView(Player *player)
     m_currentPage = PlayerView;
     m_viewedPlayer = player;
     m_editedNote = nullptr;
-    m_menuModel->setButtons({{"Back", 50}, {"Name", 110}, {"Add", 210}});
+    m_menuModel->setButtons({{"Back", 25}, {"Name", 90}, {"Del.", 150}, {"Add", 210}});
     emit currentPageChanged();
 }
 
@@ -66,12 +57,8 @@ void Controller::goToNoteEdit(Note *note)
 bool Controller::onBackButton()
 {
     switch (m_currentPage) {
-    case StartPage: {
-        return false;
-    }
     case PlayersList: {
-        goToStartPage();
-        return true;
+        return false;
     }
     case PlayerView: {
         goToPlayersList();
@@ -85,6 +72,8 @@ bool Controller::onBackButton()
         emit endNoteEditing();
         return true;
     }
+    default:
+        return true;
     }
 }
 
@@ -102,16 +91,14 @@ void Controller::cancelPlayerEditName()
 
 void Controller::menuClicked(int index)
 {
-    switch (m_currentPage) {
-    case StartPage: {
-        if (index == 0)
-            goToPlayersList();
-        break;
+    if (isVerificationOpen()) {
+        // ignore menu click while verification overlay is open
+        return;
     }
+
+    switch (m_currentPage) {
     case PlayersList: {
         if (index == 0) {
-            goToStartPage();
-        } else if (index == 1) {
             goToPlayerNameEdit(m_database->addNewPlayer(), true);
         }
         break;
@@ -121,12 +108,17 @@ void Controller::menuClicked(int index)
         if (index == 0) {
             goToPlayersList();
         }
-        // Name
+        // Player Name
         else if (index == 1) {
             goToPlayerNameEdit(m_viewedPlayer, false);
         }
-        // Add Note
+        // Delete Player
         else if (index == 2) {
+            m_verification = DeletePlayer;
+            emit currentPageChanged();
+        }
+        // Add Note
+        else if (index == 3) {
             goToNoteEdit(m_viewedPlayer->newNote());
             emit showCategorySelector(m_editedNote->category());
         }
@@ -162,8 +154,8 @@ void Controller::menuClicked(int index)
         }
         // delete
         else if (index == 2) {
-            m_viewedPlayer->removeNote(m_editedNote);
-            goToPlayerView(m_viewedPlayer);
+            m_verification = DeleteNote;
+            emit currentPageChanged();
         }
         // save
         else if (index == 3) {
@@ -189,4 +181,45 @@ void Controller::noteEdited(const QString &text)
 
         emit saveData();
     }
+}
+
+QString Controller::verificationText() const
+{
+    switch (m_verification) {
+    case None: return "";
+    case DeleteNote: return "Delete Note?";
+    case DeletePlayer: return "Delete Player?";
+    default: return "";
+    }
+}
+
+bool Controller::isVerificationOpen() const
+{
+    return (m_verification != None);
+}
+
+void Controller::verificationClicked(bool ok)
+{
+    switch (m_verification) {
+    case DeleteNote: {
+        if (ok) {
+            m_viewedPlayer->removeNote(m_editedNote);
+            goToPlayerView(m_viewedPlayer);
+            emit saveData();
+        }
+        break;
+    }
+    case DeletePlayer: {
+        if (ok) {
+            m_database->removePlayer(m_viewedPlayer);
+            goToPlayersList();
+            emit saveData();
+        }
+        break;
+    }
+    default: break;
+    }
+
+    m_verification = None;
+    emit currentPageChanged();
 }

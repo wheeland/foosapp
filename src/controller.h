@@ -15,13 +15,15 @@ class Controller : public QObject
     Q_PROPERTY(Player *viewedPlayer READ viewedPlayer NOTIFY currentPageChanged)
     Q_PROPERTY(Note *editedNote READ editedNote NOTIFY currentPageChanged)
 
+    Q_PROPERTY(bool verificationOpen READ isVerificationOpen NOTIFY currentPageChanged)
+    Q_PROPERTY(QString verificationText READ verificationText NOTIFY currentPageChanged)
+
 public:
     Controller(Database *database, QObject *parent = nullptr);
     ~Controller();
 
     enum Page
     {
-        StartPage,
         PlayersList,
         PlayerView,
         PlayerNameEdit,
@@ -38,7 +40,10 @@ public:
     Q_INVOKABLE void menuClicked(int index);
     Q_INVOKABLE void noteEdited(const QString &text);
 
-    void goToStartPage();
+    QString verificationText() const;
+    bool isVerificationOpen() const;
+    Q_INVOKABLE void verificationClicked(bool ok);
+
     void goToPlayersList();
     void goToPlayerNameEdit(Player *player, bool newPlayer);
 
@@ -59,7 +64,13 @@ private:
     Database *m_database;
     QScopedPointer<MenuModel> m_menuModel;
 
-    Page m_currentPage = StartPage;
+    Page m_currentPage = PlayersList;
+
+    enum VerificationPopup {
+        None,
+        DeleteNote,
+        DeletePlayer,
+    } m_verification = None;
 
     QPair<QString, QString> m_playerNameBeforeEdit;
     Player *m_viewedPlayer = nullptr;

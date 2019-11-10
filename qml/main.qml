@@ -164,5 +164,13 @@ Rectangle {
                 }
             }
         }
+
+        //
+        // Verification Popup
+        //
+        VerificationPopup {
+            anchors.centerIn: parent
+            width: 200 * _scale
+        }
     }
 }

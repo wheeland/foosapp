@@ -11,6 +11,7 @@
         <file>qml/PlayerNamePopup.qml</file>
         <file>qml/Style.qml</file>
         <file>qml/SingleshotTimer.qml</file>
+        <file>qml/VerificationPopup.qml</file>
     </qresource>
 </RCC>
 
