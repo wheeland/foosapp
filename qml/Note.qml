@@ -51,17 +51,45 @@ Rectangle {
             font.bold: true
         }
 
-        TextEdit {
-            id: textEdit
+        Flickable {
+            id: textFlick
+
             anchors.top: categoryText.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.topMargin: root.padding * _scale
-            height: (root.expanded || focus) ? implicitHeight
-                                             : Math.min(2.5 * font.pixelSize, implicitHeight)
-            color: _style.colorText
-            font.pixelSize: 11 * _scale
-            wrapMode: TextInput.Wrap
+
+            height: {
+                if (root.textFocus)
+                    return root.height - 3 * root.padding * _scale - categoryText.height;
+                else if (root.expanded)
+                    return textEdit.implicitHeight;
+                else
+                    return textEdit.cappedHeight
+            }
+
+            contentWidth: textEdit.width
+            contentHeight: textEdit.height
+            clip: true
+
+            function ensureVisible(cursor) {
+                contentY = Math.min(contentY, cursor.y);
+                contentY = Math.max(contentY, cursor.y + cursor.height - height);
+            }
+
+            TextEdit {
+                id: textEdit
+
+                readonly property real cappedHeight: Math.min(2.5 * font.pixelSize, implicitHeight)
+
+                width: textFlick.width
+                height: (root.expanded || focus) ? implicitHeight : cappedHeight
+                color: _style.colorText
+                font.pixelSize: 11 * _scale
+                wrapMode: TextInput.Wrap
+
+                onCursorRectangleChanged: textFlick.ensureVisible(cursorRectangle)
+            }
         }
     }
 
