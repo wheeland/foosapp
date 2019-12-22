@@ -1,3 +1,7 @@
 menu mit spielern. zusaetzlich: "ich" (mit spielaufbau) und "training"
 jedem spieler koennen kategorien hinzugefuegt werden:
 3, 5, etc. jeweils mit optionalen unterkategorien
+
+TODO:
+    - don't open keyboard when adding new note and having cat.selector open
+    - delete player
